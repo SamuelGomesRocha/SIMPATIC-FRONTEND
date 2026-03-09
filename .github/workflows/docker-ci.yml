@@ -1,0 +1,35 @@
+name: Docker CI/CD
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build and Load
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        load: true
+        tags: front-end-simpatic:test
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Container Health Check
+      run: |
+        docker run -d --name healthcheck-container -p 8080:8080 front-end-simpatic:test
+        sleep 10
+        docker inspect --format='{{json .State.Health.Status}}' healthcheck-container | grep -q '"healthy"' || (docker logs healthcheck-container && exit 1)
+        docker rm -f healthcheck-container

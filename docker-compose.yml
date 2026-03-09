@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  front-end-simpatic:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: front-end-simpatic
+    image: front-end-simpatic:latest
+    ports:
+      - "8085:8080"
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    healthcheck:
+      test: [ "CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:8080/" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3

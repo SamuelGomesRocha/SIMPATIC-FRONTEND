@@ -1,0 +1,14 @@
+node_modules
+dist
+.git
+.gitignore
+*.md
+npm-debug.log
+README.md
+.vscode
+# .eslint.config.js - often needed for linting during build if configured
+# tsconfig*.json - CRITICAL for build
+# vite.config.ts - CRITICAL for build
+build_log.txt
+build_log_utf8.txt
+tsc_output.txt
