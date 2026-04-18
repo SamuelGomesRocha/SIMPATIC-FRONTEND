@@ -11,6 +11,8 @@ import dodHtmlRaw from '../../doc_models/1. Documento de Oficializacao da Demand
 import etpHtmlRaw from '../../doc_models/2. Estudo Tecnico Preliminar.html?raw';
 // @ts-ignore
 import trHtmlRaw from '../../doc_models/4. Termo de Referencia.html?raw';
+import type { DODResponse, ETPResponse, TRResponse, FieldSelection } from '../types';
+import { getSelectedValue } from './helpers';
 
 /** Tipos de documento suportados */
 export type DocumentType = 'DOD' | 'ETP' | 'TR';
@@ -296,17 +298,169 @@ function saveAs(blob: Blob, filename: string): void {
 }
 
 /**
+ * Gera o HTML preenchido a partir de um template e das seleções do usuário.
+ * Utilizado para exportação na Visão Simplificada.
+ */
+export function generatePopulatedHtml(
+    documentType: DocumentType,
+    response: any,
+    selections: Record<string, FieldSelection>
+): string {
+    const rawTemplate = RAW_TEMPLATES[documentType];
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(rawTemplate, 'text/html');
+
+    const getVal = (key: string) => {
+        let suggestions: string[] = [];
+        if (key.includes('.')) {
+            const [parent, child] = key.split('.');
+            suggestions = (response[parent] as any)?.[child] || [];
+        } else {
+            suggestions = (response as any)?.[key] || [];
+        }
+        return getSelectedValue(key, suggestions, selections);
+    };
+
+    if (documentType === 'DOD') {
+        const replacements = [
+            { selector: '.resp_nome_do_projeto', field: 'nome_projeto' },
+            { selector: '.resp_data_envio', field: 'data_envio' },
+            { selector: '.resp_identificacao_demanda', field: 'identificacao_pca' },
+            { selector: '.resp_alinhamento_loa', field: 'alinhamento_loa' },
+            { selector: '.resp_fonte_recurso', field: 'fonte_recurso' },
+            { selector: '.resp_motivacao_justificativa', field: 'motivacao_justificativa' },
+            { selector: '.resp_resultados_beneficios', field: 'resultados_beneficios' },
+            { selector: '.resp_plano_gestao', field: 'planejamento_estrategico.plano_gestao' },
+            { selector: '.resp_plano_anual', field: 'planejamento_estrategico.plano_anual_contratacoes' },
+            { selector: '.resp_pdtic', field: 'planejamento_estrategico.pdtic' },
+        ];
+
+        replacements.forEach(rep => {
+            const el = doc.querySelector(rep.selector);
+            if (el) el.innerHTML = getVal(rep.field);
+        });
+
+        // Entic Jud é tratado via texto
+        doc.querySelectorAll('p, span, font').forEach(el => {
+            if (el.textContent?.includes('apresentar') && el.textContent?.includes('descrição') && el.closest('li')?.textContent?.includes('ENTIC-JUD')) {
+                el.innerHTML = getVal('planejamento_estrategico.entic_jud');
+            }
+        });
+    } 
+    else if (documentType === 'ETP') {
+        // Mapeamento extraído de ETPRichTextCanvas
+        const ETP_SIMPLE_FIELDS = [
+            'resp_descricao_solucao', 'resp_potenciais_usuarios', 'resp_requisitos_tecnologicos',
+            'resp_requisitos_legais', 'resp_requisitos_temporais', 'resp_requisitos_capacitacao',
+            'resp_requisitos_manutencao', 'resp_requisitos_seguranca', 'resp_requisitos_social_cultural_sustentabilidade',
+            'resp_requisitos_niveis_servico', 'resp_requisitos_qualificacao_experiencia', 'resp_requisitos_formas_comunicacao',
+            'resp_padroes_interoperabilidade', 'resp_outros_requisitos', 'resp_periodo_analisado',
+            'resp_termos_analisados', 'resp_metodologia_de_calculo', 'resp_alternativa_1', 'resp_alternativa_2',
+            'resp_alternativa_3', 'resp_alternativa_4', 'resp_alternativa_5', 'resp_justificativa_escola_solucao_de_ti',
+            'resp_relacao_demanda_prevista_e_quantidade', 'resp_necessidades_adequacao_ambiente', 'resp_relacao_necessidade_volumes',
+            'resp_forma_calculo_quantitativo', 'resp_natureza_objeto', 'resp_modalidade_tipo_licitacao',
+            'resp_parcelamento_objeto', 'resp_vigencia_contrato', 'resp_acoes_transicao',
+            'resp_motivacao_justificativa_escolha', 'resp_necessidade_recursos_materiais_humanos',
+            'resp_estrategia_continuidade', 'resp_estrategia_independencia_tjgo', 'resp_viabilidade_economica_contratacao',
+            'resp_aprovacao_assinatura_estudo_tecnico'
+        ];
+
+        ETP_SIMPLE_FIELDS.forEach(field => {
+            const el = doc.querySelector(`.resp_${field}`);
+            if (el) el.innerHTML = getVal(field);
+        });
+
+        // Campos aninhados de interoperabilidade
+        const interopFields = [
+            { selector: '.resp_mni', field: 'resp_requisitos_padroes_interoperabilidade.resp_mni' },
+            { selector: '.resp_icp_brasil', field: 'resp_requisitos_padroes_interoperabilidade.resp_icp_brasil' },
+            { selector: '.resp_moreq_jus', field: 'resp_requisitos_padroes_interoperabilidade.resp_moreq_jus' },
+        ];
+        
+        interopFields.forEach(item => {
+            const el = doc.querySelector(item.selector);
+            if (el) el.innerHTML = getVal(item.field);
+        });
+    }
+    else if (documentType === 'TR') {
+        const TR_SIMPLE_FIELDS = [
+            'resp_objeto_descricao', 'resp_justificativa', 'resp_beneficios_objetivos',
+            'resp_do_agrupamento_do_objeto', 'resp_caracteristicas_especificacoes_objeto',
+            'resp_perfil_exigido_profissionais', 'resp_garantia_contratual', 'resp_amostra_poc',
+            'resp_vistoria', 'resp_vigencia_local_prazo_entrega', 'resp_proposta_de_precos',
+            'resp_plano_aquisicao_contratacao_distribuicao', 'resp_obrigacoes_contratada',
+            'resp_prevenc_consciencia_combate_racismo', 'resp_prevenc_enfrentamento_assedio_moral',
+            'resp_protecao_dados', 'resp_crit_sustentabilidade', 'resp_reserva_cargos',
+            'resp_obrigacoes_contratante', 'resp_infracoes_sancoes_administrativas',
+            'resp_subcontratacao', 'resp_vedacao_participacao', 'resp_habilitacao',
+            'resp_habilitacao_qualificacao_economica', 'resp_habilitacao_qualificacao_tecnica',
+            'resp_forma_pagamento', 'resp_valores_estimados', 'resp_documentos_complementares'
+        ];
+
+        TR_SIMPLE_FIELDS.forEach(field => {
+            const el = doc.querySelector(`.resp_${field}`);
+            if (el) {
+                const value = getVal(field);
+                
+                // Tratar tabela de objeto se for o campo resp_objeto_descricao
+                if (field === 'resp_objeto_descricao' && value.startsWith('[')) {
+                    try {
+                        const items = JSON.parse(value);
+                        if (Array.isArray(items) && items.length > 0) {
+                            let tableHtml = `<table style="width:100%; border-collapse:collapse; border:1px solid black;">
+                                <thead>
+                                    <tr style="background-color:#eeeeee;">
+                                        <th style="border:1px solid black; padding:4px;">Item</th>
+                                        <th style="border:1px solid black; padding:4px;">Objeto</th>
+                                        <th style="border:1px solid black; padding:4px;">Qtd</th>
+                                        <th style="border:1px solid black; padding:4px;">Métrica</th>
+                                        <th style="border:1px solid black; padding:4px;">Unidade</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
+                            
+                            items.forEach((item: any) => {
+                                tableHtml += `<tr>
+                                    <td style="border:1px solid black; padding:4px; text-align:center;">${item.item || ''}</td>
+                                    <td style="border:1px solid black; padding:4px;">${item.objeto || ''}</td>
+                                    <td style="border:1px solid black; padding:4px; text-align:center;">${item.quantidade || ''}</td>
+                                    <td style="border:1px solid black; padding:4px; text-align:center;">${item.metrica || ''}</td>
+                                    <td style="border:1px solid black; padding:4px; text-align:center;">${item.unidade || ''}</td>
+                                </tr>`;
+                            });
+                            
+                            tableHtml += `</tbody></table>`;
+                            el.innerHTML = tableHtml;
+                        } else {
+                            el.innerHTML = value;
+                        }
+                    } catch (e) {
+                        el.innerHTML = value;
+                    }
+                } else {
+                    el.innerHTML = value;
+                }
+            }
+        });
+    }
+
+    return doc.documentElement.outerHTML;
+}
+
+/**
  * Função principal de exportação.
  */
 export async function exportDocument(
     format: ExportFormat,
     documentType: DocumentType,
+    htmlContent?: string
 ): Promise<void> {
     try {
-        // 1. Capturar HTML do editor
-        const editorHtml = captureEditorHtml();
-        if (!editorHtml) {
-            alert('Não foi possível capturar o conteúdo do editor. Verifique se o modo "Edição Avançada" está ativo.');
+        // 1. Capturar HTML do editor ou usar conteúdo fornecido
+        const contentHtml = htmlContent || captureEditorHtml();
+        
+        if (!contentHtml) {
+            alert('Não foi possível capturar o conteúdo do documento. Verifique se as sugestões foram carregadas.');
             return;
         }
 
@@ -320,13 +474,13 @@ export async function exportDocument(
         // 4. Exportar no formato solicitado
         switch (format) {
             case 'pdf':
-                await exportAsPdf(styles, editorHtml, filename);
+                await exportAsPdf(styles, contentHtml, filename);
                 break;
             case 'docx':
-                exportAsDocx(editorHtml, filename);
+                exportAsDocx(contentHtml, filename);
                 break;
             case 'odt':
-                await exportAsOdt(editorHtml, filename);
+                await exportAsOdt(contentHtml, filename);
                 break;
             default:
                 throw new Error(`Formato não suportado: ${format}`);

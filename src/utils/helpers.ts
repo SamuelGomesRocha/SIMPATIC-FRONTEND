@@ -23,6 +23,26 @@ export function formatDate(date: Date): string {
 }
 
 /**
+ * Aplica máscara de moeda em Reais (BRL)
+ */
+export function maskCurrency(value: string): string {
+    // Remove tudo que não é dígito
+    let cleanValue = value.replace(/\D/g, '');
+    
+    if (!cleanValue) return '';
+    
+    // Converte para número e divide por 100 para ter as casas decimais
+    const numberValue = parseFloat(cleanValue) / 100;
+    
+    // Formata como BRL
+    return new Intl.NumberFormat('pt-BR', {
+        style: 'currency',
+        currency: 'BRL',
+        minimumFractionDigits: 2
+    }).format(numberValue);
+}
+
+/**
  * Retorna o valor selecionado pelo usuário para um campo,
  * considerando edição customizada ou sugestão escolhida.
  */
@@ -74,7 +94,7 @@ export async function exportDOD(
         };
 
         const peFieldMap: Record<string, { selector: string; dataKey: string }> = {
-            'planejamento_estrategico.plano_estrategico': { selector: '.resp_plano_estrategico', dataKey: 'plano_gestao' },
+            'planejamento_estrategico.plano_estrategico': { selector: '.resp_plano_estrategico', dataKey: 'plano_estrategico' },
             'planejamento_estrategico.plano_gestao': { selector: '.resp_plano_gestao', dataKey: 'plano_gestao' },
             'planejamento_estrategico.plano_anual_contratacoes': { selector: '.resp_plano_anual', dataKey: 'plano_anual_contratacoes' },
             'planejamento_estrategico.pdtic': { selector: '.resp_pdtic', dataKey: 'pdtic' },

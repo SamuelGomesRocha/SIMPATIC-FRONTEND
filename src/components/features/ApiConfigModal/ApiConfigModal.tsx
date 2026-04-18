@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Settings, X, CheckCircle, Key, Cpu, Radio } from 'lucide-react';
-import { getApiUrl, setApiUrl, getApiKey, setApiKey, getApiModel, setApiModel, getApiEnvironment, setApiEnvironment } from '../../../api/dodService';
+import { getApiKey, setApiKey, getApiModel, setApiModel, getApiEnvironment, setApiEnvironment } from '../../../api/dodService';
+import { GEMINI_MODEL_OPTIONS } from '../../../config/constants';
 
 interface ApiConfigModalProps {
     isOpen: boolean;
@@ -11,7 +12,6 @@ interface ApiConfigModalProps {
  * Modal para configuração da URL da API REST
  */
 export default function ApiConfigModal({ isOpen, onClose }: ApiConfigModalProps) {
-    const [url, setUrl] = useState(getApiUrl());
     const [apiKey, setApiKeyLocal] = useState(getApiKey());
     const [model, setModelLocal] = useState(getApiModel());
     const [environment, setEnvironment] = useState(getApiEnvironment());
@@ -20,7 +20,6 @@ export default function ApiConfigModal({ isOpen, onClose }: ApiConfigModalProps)
     if (!isOpen) return null;
 
     const handleSave = () => {
-        setApiUrl(url.replace(/\/+$/, '')); // Remove trailing slashes
         setApiKey(apiKey.trim());
         setApiModel(model);
         setApiEnvironment(environment);
@@ -76,24 +75,6 @@ export default function ApiConfigModal({ isOpen, onClose }: ApiConfigModalProps)
                     </div>
 
                     <div className="form-group" style={{ marginTop: '1.5rem' }}>
-                        <label htmlFor="api-url">
-                            URL Base da API <span className="required">*</span>
-                        </label>
-                        <input
-                            id="api-url"
-                            type="url"
-                            className="form-input"
-                            value={url}
-                            onChange={(e) => setUrl(e.target.value)}
-                            placeholder="http://localhost:8000"
-                            disabled={environment === 'homologacao'}
-                        />
-                        <span style={{ fontSize: '0.75rem', color: '#888', marginTop: 4 }}>
-                            Endereço do servidor backend que processa as sugestões.
-                        </span>
-                    </div>
-
-                    <div className="form-group" style={{ marginTop: '1.5rem' }}>
                         <label htmlFor="api-key" style={{ opacity: environment === 'homologacao' ? 0.5 : 1 }}>
                             <Key size={14} style={{ marginRight: 4, verticalAlign: 'text-bottom' }} />
                             Chave de API do Gemini (Opcional)
@@ -126,14 +107,16 @@ export default function ApiConfigModal({ isOpen, onClose }: ApiConfigModalProps)
                             onChange={(e) => setModelLocal(e.target.value)}
                             disabled={environment === 'homologacao'}
                         >
-                            <option value="gemini-1.5-flash">gemini-1.5-flash (Padrão)</option>
-                            <option value="gemini-2.5-flash">gemini-2.5-flash</option>
-                            <option value="gemini-2.5-flash-lite">gemini-2.5-flash-lite</option>
+                            {GEMINI_MODEL_OPTIONS.map(opt => (
+                                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                            ))}
                         </select>
                         <span style={{ fontSize: '0.75rem', color: '#888', marginTop: 4 }}>
                             {environment === 'homologacao'
                                 ? 'Desativado em modo de homologação.'
-                                : 'Selecione o modelo que será utilizado para processar as sugestões.'}
+                                : model.includes('preview') 
+                                    ? 'Este modelo está em fase de preview. O identificador utilizado será models/gemini-3.1-flash-lite-preview.'
+                                    : 'Selecione o modelo que será utilizado para processar as sugestões.'}
                         </span>
                     </div>
                 </div>

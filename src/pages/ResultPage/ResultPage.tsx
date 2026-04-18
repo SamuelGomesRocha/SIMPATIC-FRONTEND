@@ -1,37 +1,38 @@
 import { useState } from 'react';
-import { RotateCcw, CheckCircle2, Landmark, Settings, FileText, FileType, FileOutput, LayoutGrid, ArrowRight } from 'lucide-react';
+import { RotateCcw, CheckCircle2, Settings, FileText, FileType, FileOutput, LayoutGrid, ArrowRight, ClipboardList, Target } from 'lucide-react';
 import ApiConfigModal from '../../components/features/ApiConfigModal';
 import DocumentEditor from '../../components/features/DocumentEditor';
 import FloatingActions from '../../components/features/DocumentEditor/FloatingActions';
-import type { DODResponse, FieldSelection } from '../../types';
+import type { DODResponse, FieldSelection, SuggestionItem } from '../../types';
 import { DOD_FIELD_LABELS } from '../../config/constants';
-import { exportDocument } from '../../utils/exportService';
+import { exportDocument, generatePopulatedHtml } from '../../utils/exportService';
+import { getDODStandardText } from '../../config/standardTexts';
 import SuggestionField from '../../components/ui/SuggestionField';
 
 interface ResultPageProps {
     response: DODResponse;
     onReset: () => void;
     onConfirmEditing?: (selections: Record<string, FieldSelection>) => void;
+    /** trace_id da sessão de geração do DOD (habilita avaliação humana) */
+    traceId?: string | null;
 }
 
-/** Campos simples (não aninhados) */
-const SIMPLE_FIELDS = [
+/** Seção 1: Documento de Oficialização da Demanda */
+const SECTION_DOD_FIELDS = [
     'nome_projeto',
     'data_envio',
     'identificacao_pca',
-    "fonte_recurso",
+    'fonte_recurso',
     'alinhamento_loa',
+] as const;
+
+/** Seção 2: Motivação, Justificativa e Resultados */
+const SECTION_MOTIVATION_FIELDS = [
     'motivacao_justificativa',
     'resultados_beneficios',
 ] as const;
 
 /** Campos do Planejamento Estratégico */
-const PE_FIELDS = [
-    { key: 'planejamento_estrategico.plano_gestao', dataKey: 'plano_gestao' as const },
-    { key: 'planejamento_estrategico.plano_anual_contratacoes', dataKey: 'plano_anual_contratacoes' as const },
-    { key: 'planejamento_estrategico.pdtic', dataKey: 'pdtic' as const },
-    { key: 'planejamento_estrategico.entic_jud', dataKey: 'entic_jud' as const },
-];
 
 /**
  * Inicializa as seleções padrão (primeira sugestão para cada campo)
@@ -39,13 +40,13 @@ const PE_FIELDS = [
 function initSelections(): Record<string, FieldSelection> {
     const selections: Record<string, FieldSelection> = {};
 
-    for (const key of SIMPLE_FIELDS) {
+    const allSimpleFields = [...SECTION_DOD_FIELDS, ...SECTION_MOTIVATION_FIELDS];
+    for (const key of allSimpleFields) {
         selections[key] = { fieldKey: key, selectedIndex: 0, isEditing: false };
     }
 
-    for (const { key } of PE_FIELDS) {
-        selections[key] = { fieldKey: key, selectedIndex: 0, isEditing: false };
-    }
+    // Campo agregado do Planejamento Estratégico
+    selections['planejamento_estrategico'] = { fieldKey: 'planejamento_estrategico', selectedIndex: 0, isEditing: false };
 
     return selections;
 }
@@ -53,11 +54,11 @@ function initSelections(): Record<string, FieldSelection> {
 /**
  * Página de resultado com sugestões editáveis e download em PDF.
  */
-export default function ResultPage({ response, onReset, onConfirmEditing }: ResultPageProps) {
+export default function ResultPage({ response, onReset, onConfirmEditing, traceId }: ResultPageProps) {
     const [selections, setSelections] = useState<Record<string, FieldSelection>>(initSelections);
     const [isApiConfigOpen, setIsApiConfigOpen] = useState(false);
     const [showExportMenu, setShowExportMenu] = useState(false);
-    const [viewMode, setViewMode] = useState<'simplified' | 'advanced'>('advanced');
+    const [viewMode, setViewMode] = useState<'simplified' | 'advanced'>('simplified');
 
     const handleSelectionChange = (fieldKey: string, partial: Partial<FieldSelection>) => {
         setSelections((prev) => ({
@@ -79,7 +80,12 @@ export default function ResultPage({ response, onReset, onConfirmEditing }: Resu
     };
 
     const handleExport = (format: 'pdf' | 'docx' | 'odt') => {
-        exportDocument(format, 'DOD');
+        if (viewMode === 'simplified') {
+            const html = generatePopulatedHtml('DOD', response, selections);
+            exportDocument(format, 'DOD', html);
+        } else {
+            exportDocument(format, 'DOD');
+        }
         setShowExportMenu(false);
     };
 
@@ -135,18 +141,18 @@ export default function ResultPage({ response, onReset, onConfirmEditing }: Resu
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <div className="view-toggle">
                         <button
-                            className={`view-toggle__btn ${viewMode === 'advanced' ? 'view-toggle__btn--active' : ''}`}
-                            onClick={() => setViewMode('advanced')}
-                        >
-                            <FileText size={16} />
-                            Edição Avançada
-                        </button>
-                        <button
                             className={`view-toggle__btn ${viewMode === 'simplified' ? 'view-toggle__btn--active' : ''}`}
                             onClick={() => setViewMode('simplified')}
                         >
                             <LayoutGrid size={16} />
                             Visão Simplificada
+                        </button>
+                        <button
+                            className={`view-toggle__btn ${viewMode === 'advanced' ? 'view-toggle__btn--active' : ''}`}
+                            onClick={() => setViewMode('advanced')}
+                        >
+                            <FileText size={16} />
+                            Edição Avançada
                         </button>
                     </div>
                     {exportActions}
@@ -159,6 +165,14 @@ export default function ResultPage({ response, onReset, onConfirmEditing }: Resu
                     >
                         <Settings size={18} />
                     </button>
+                    {onConfirmEditing && (
+                        <button
+                            className="btn btn--primary"
+                            onClick={() => onConfirmEditing(selections)}
+                        >
+                            <CheckCircle2 size={18} /> Confirmar Edição e Gerar ETP
+                        </button>
+                    )}
                     <button
                         className="btn btn--secondary"
                         onClick={onReset}
@@ -173,68 +187,125 @@ export default function ResultPage({ response, onReset, onConfirmEditing }: Resu
             <div key={viewMode} className="view-fade-in">
                 {viewMode === 'simplified' ? (
                     <>
-                        {/* Campos simples */}
-                        {SIMPLE_FIELDS.map((key) => {
-                            let suggestions = response[key] || [];
+                        {/* Função auxiliar para renderizar cada campo com suas regras específicas */}
+                        {(() => {
+                            const renderField = (key: string) => {
+                                let suggestions: string[] = [];
+                                if (key === 'planejamento_estrategico') {
+                                    // Agregação visual dos 4 campos do PE
+                                    const pg = response.planejamento_estrategico.plano_gestao || [];
+                                    const pac = response.planejamento_estrategico.plano_anual_contratacoes || [];
+                                    const pdtic = response.planejamento_estrategico.pdtic || [];
+                                    const entic = response.planejamento_estrategico.entic_jud || [];
+                                    
+                                    const maxLength = Math.max(pg.length, pac.length, pdtic.length, entic.length);
+                                    for (let i = 0; i < maxLength; i++) {
+                                        const combined = [
+                                            pg[i], pac[i], pdtic[i], entic[i]
+                                        ].filter(Boolean).join('\n\n');
+                                        if (combined) suggestions.push(combined);
+                                    }
+                                } else {
+                                    suggestions = response[key as keyof DODResponse] as string[] || [];
+                                }
 
-                            // Regra TJGO: Para Nome, Data e PCA, mostrar apenas a primeira sugestão
-                            if (key === 'nome_projeto' || key === 'data_envio' || key === 'identificacao_pca') {
-                                const first = suggestions[0] || '';
-                                // Aplicar Regex no PCA
-                                const cleaned = key === 'identificacao_pca' ? cleanPcaText(first) : first;
-                                suggestions = cleaned ? [cleaned] : [];
-                            }
+                                // Regra TJGO: Para Nome, Data e PCA, mostrar apenas a primeira sugestão
+                                if (key === 'nome_projeto' || key === 'data_envio' || key === 'identificacao_pca') {
+                                    const first = suggestions[0] || '';
+                                    // Aplicar Regex no PCA
+                                    const cleaned = key === 'identificacao_pca' ? cleanPcaText(first) : first;
+                                    suggestions = cleaned ? [cleaned] : [];
+                                }
 
-                            return (
-                                <SuggestionField
-                                    key={key}
-                                    fieldKey={key}
-                                    label={DOD_FIELD_LABELS[key] || key}
-                                    suggestions={suggestions}
-                                    selection={selections[key]}
-                                    onSelectionChange={handleSelectionChange}
-                                />
-                            );
-                        })}
+                                // Formatação para Resultados e Benefícios: quebra de linha em itens (a), b), etc.)
+                                if (key === 'resultados_beneficios') {
+                                    suggestions = suggestions.map(s => 
+                                        s.replace(/(;\s*|\s+)(?=[a-z]\))/gi, (match) => {
+                                            return match.includes(';') ? ';\n' : '\n';
+                                        }).trim()
+                                    );
+                                }
 
-                        {/* Planejamento Estratégico */}
-                        <div className="pe-section">
-                            <div className="pe-section__header">
-                                <Landmark size={20} />
-                                Planejamento Estratégico
-                            </div>
-                            <div className="pe-section__body">
-                                {PE_FIELDS.map(({ key, dataKey }) => (
+                                // Enriquecer com sugestões da IA
+                                const enrichedSuggestions: SuggestionItem[] = suggestions.map(
+                                    text => ({ text, source: 'ai' as const })
+                                );
+
+                                // Tentar obter texto padrão (StandardText)
+                                const standardText = getDODStandardText(key);
+                                if (standardText) {
+                                    enrichedSuggestions.push({ text: standardText, source: 'standard' });
+                                }
+
+                                return (
                                     <SuggestionField
                                         key={key}
                                         fieldKey={key}
                                         label={DOD_FIELD_LABELS[key] || key}
-                                        suggestions={response.planejamento_estrategico[dataKey] || []}
+                                        suggestions={enrichedSuggestions}
                                         selection={selections[key]}
                                         onSelectionChange={handleSelectionChange}
+                                        traceId={traceId}
+                                        documentType="DOD"
                                     />
-                                ))}
-                            </div>
-                        </div>
+                                );
+                            };
+
+                            return (
+                                <>
+                                    {/* Seção 1: Documento de Oficialização da Demanda */}
+                                    <div className="pe-section pe-section--blue">
+                                        <div className="pe-section__header">
+                                            <ClipboardList size={20} />
+                                            Documento de Oficialização da Demanda
+                                        </div>
+                                        <div className="pe-section__body">
+                                            {SECTION_DOD_FIELDS.map(renderField)}
+                                        </div>
+                                    </div>
+
+                                    {/* Seção 2: Motivação, Justificativa e Resultados */}
+                                    <div className="pe-section pe-section--blue">
+                                        <div className="pe-section__header">
+                                            <Target size={20} />
+                                            Motivação, Justificativa e Resultados
+                                        </div>
+                                        <div className="pe-section__body">
+                                            {SECTION_MOTIVATION_FIELDS.map(renderField)}
+                                        </div>
+                                    </div>
+
+                                    {/* Seção 3: Planejamento Estratégico (Agregado) */}
+                                    <div className="pe-section pe-section--blue">
+                                        <div className="pe-section__header">
+                                            <FileType size={20} />
+                                            Planejamento Estratégico
+                                        </div>
+                                        <div className="pe-section__body">
+                                            {renderField('planejamento_estrategico')}
+                                        </div>
+                                    </div>
+                                </>
+                            );
+                        })()}
                     </>
                 ) : (
-                    <DocumentEditor
-                        response={response}
+                    <DocumentEditor 
+                        response={response} 
                         selections={selections}
                         onSelectionChange={handleSelectionChange}
+                        traceId={traceId}
                     />
                 )}
             </div>
 
-            {viewMode === 'advanced' && (
-                <FloatingActions
-                    onExport={(format) => handleExport(format)}
-                    onReset={onReset}
-                    documentLabel="DOD"
-                    onConfirmEditing={onConfirmEditing ? handleConfirmEditing : undefined}
-                    confirmLabel="Confirmar Edição"
-                />
-            )}
+            <FloatingActions
+                onExport={(format) => handleExport(format)}
+                onReset={onReset}
+                documentLabel="DOD"
+                onConfirmEditing={onConfirmEditing ? handleConfirmEditing : undefined}
+                confirmLabel="Confirmar Edição"
+            />
 
             {/* Ações finais com botão Confirmar Edição */}
             <div className="result-page__actions result-page__actions--bottom">

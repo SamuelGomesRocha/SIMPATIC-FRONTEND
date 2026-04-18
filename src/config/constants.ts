@@ -15,13 +15,20 @@ export const API_MODEL_STORAGE_KEY = 'gemini_api_model';
 export const API_ENVIRONMENT_STORAGE_KEY = 'api_environment';
 
 /** Modelo padrão do Gemini */
-export const DEFAULT_API_MODEL = 'gemini-1.5-flash';
+export const DEFAULT_API_MODEL = 'gemini-2.5-flash-lite';
+
+/** Opções de Modelos do Gemini */
+export const GEMINI_MODEL_OPTIONS = [
+    { value: 'models/gemini-3.1-flash-lite-preview', label: 'gemini-3.1-flash-lite (Preview)' },
+    { value: 'gemini-2.5-flash-lite', label: 'gemini-2.5-flash-lite (Padrão)' },
+    { value: 'gemini-2.5-flash', label: 'gemini-2.5-flash' },
+];
 
 /** Ambiente padrão da API */
 export const DEFAULT_API_ENVIRONMENT = 'producao';
 
 /** URL padrão da API */
-export const DEFAULT_API_URL = 'http://localhost:8000';
+export const DEFAULT_API_URL = 'http://127.0.0.1:8400';
 
 /** Timeout padrão da API em milissegundos */
 export const DEFAULT_API_TIMEOUT = 600000;
@@ -43,6 +50,22 @@ export const MODELO_OPTIONS = [
 export const INVESTIMENTO_CUSTEIO_OPTIONS = [
     'Investimento',
     'Custeio',
+];
+
+/** Opções de Meses para Data Prevista */
+export const MESES_OPTIONS = [
+    { value: '01', label: 'Janeiro' },
+    { value: '02', label: 'Fevereiro' },
+    { value: '03', label: 'Março' },
+    { value: '04', label: 'Abril' },
+    { value: '05', label: 'Maio' },
+    { value: '06', label: 'Junho' },
+    { value: '07', label: 'Julho' },
+    { value: '08', label: 'Agosto' },
+    { value: '09', label: 'Setembro' },
+    { value: '10', label: 'Outubro' },
+    { value: '11', label: 'Novembro' },
+    { value: '12', label: 'Dezembro' },
 ];
 
 /** Dicas sobre a Lei 14.133/2021 para tela de carregamento */
@@ -75,6 +98,7 @@ export const DOD_FIELD_LABELS: Record<string, string> = {
     'planejamento_estrategico.plano_anual_contratacoes': 'Plano Anual de Contratações de TIC',
     'planejamento_estrategico.pdtic': 'Plano Diretor de Tecnologia da Informação e Comunicação (PDTIC)',
     'planejamento_estrategico.entic_jud': 'Estratégia Nacional de Tecnologia da Informação e Comunicação do Poder Judiciário (ENTIC-JUD)',
+    'planejamento_estrategico': 'Alinhamento Estratégico',
 };
 
 /** Descrições dos campos do DOD */
@@ -85,10 +109,31 @@ export const DOD_FIELD_DESCRIPTIONS: Record<string, string> = {
         'O que a solução vai trazer para o órgão em termos de benefícios e resultados com foco na eficácia, eficiência, economicidade e padronização.',
 };
 
+/** Mapeamento Front-to-Back: campo do React → dod_section no banco */
+export const DOD_SECTION_MAPPING: Record<string, string> = {
+    "nome_projeto": "Identificação - Nome do Projeto",
+    "data_envio": "Identificação - Data",
+    "identificacao_pca": "Identificação PCA",
+    "fonte_recurso": "Fonte de Recursos",
+    "alinhamento_loa": "Alinhamento LOA",
+    "motivacao_justificativa": "Motivação e Justificativa",
+    "resultados_beneficios": "Resultados e Benefícios",
+    "planejamento_estrategico.plano_gestao": "Plano de Gestão",
+    "planejamento_estrategico.plano_anual_contratacoes": "Plano Anual",
+    "planejamento_estrategico.pdtic": "PDTIC",
+    "planejamento_estrategico.entic_jud": "ENTIC-JUD"
+};
+
+/** Lista de seções DOD que suportam avaliação humana */
+export const EVALUABLE_DOD_SECTIONS = Object.keys(DOD_SECTION_MAPPING);
+
 /** Labels amigáveis para os campos do ETP */
 export const ETP_FIELD_LABELS: Record<string, string> = {
+    /* 1.1 — Descrição e Usuários */
     resp_descricao_solucao: '1.1. Descrição da Necessidade da Solução de TIC',
     resp_potenciais_usuarios: 'Potenciais Usuários',
+
+    /* 1.2 — Requisitos */
     resp_requisitos_tecnologicos: 'Requisitos Tecnológicos',
     resp_requisitos_legais: 'Requisitos Legais',
     resp_requisitos_temporais: 'Requisitos Temporais',
@@ -100,7 +145,13 @@ export const ETP_FIELD_LABELS: Record<string, string> = {
     resp_requisitos_qualificacao_experiencia: 'Requisitos de Qualificação e Experiência da Empresa Contratada',
     resp_requisitos_formas_comunicacao: 'Requisitos de Formas de Comunicação',
     resp_requisitos_padroes_interoperabilidade: 'Requisitos de Padrões e Modelos de Interoperabilidade',
+    resp_mni: 'Interoperabilidade: MNI',
+    resp_icp_brasil: 'Interoperabilidade: ICP-Brasil',
+    resp_moreq_jus: 'Interoperabilidade: MoReq-Jus',
+    resp_padroes_interoperabilidade: 'Requisitos de Padrões e Modelos de Interoperabilidade',
     resp_outros_requisitos: 'Outros Requisitos',
+
+    /* 1.3 — Levantamento de Mercado */
     resp_avaliacao_diferentes_solucoes_disponiveis: '1.3. Avaliação das Diferentes Soluções Disponíveis no Mercado',
     resp_periodo_analisado: 'Período analisado',
     resp_termos_analisados: 'Termos pesquisados',
@@ -110,7 +161,12 @@ export const ETP_FIELD_LABELS: Record<string, string> = {
     resp_alternativa_3: 'Alternativa 3',
     resp_alternativa_4: 'Alternativa 4',
     resp_alternativa_5: 'Alternativa 5',
+
+    /* 1.4 — Justificativa de Escolha */
     resp_justificativa_escola_solucao_de_ti: '1.4. Justificativa de Escolha da Solução de TI',
+    resp_motivacao_justificativa_escolha: 'Motivação e Justificativa de Escolha',
+
+    /* 1.5 — Demanda e Quantidade */
     resp_relacao_demanda_prevista_e_quantidade: '1.5. Relação entre a Demanda Prevista e a Quantidade',
     resp_relacao_necessidade_volumes: 'Relação entre Necessidade e Volumes',
     resp_forma_calculo_quantitativo: 'Forma de Cálculo do Quantitativo',
@@ -118,47 +174,86 @@ export const ETP_FIELD_LABELS: Record<string, string> = {
     resp_modalidade_tipo_licitacao: 'Modalidade e Tipo de Licitação',
     resp_parcelamento_objeto: 'Parcelamento do Objeto',
     resp_vigencia_contrato: 'Vigência do Contrato',
+
+    /* 1.6 — Adequação do Ambiente */
     resp_necessidades_adequacao_ambiente: '1.6. Necessidades de Adequação do Ambiente',
-    resp_parcelas_fornecimento: 'Divisão em Parcelas para o Fornecimento',
-    resp_quantitativo_bens_servicos: 'Quantitativo de Bens e Serviços',
-    resp_motivacao_justificativa_escolha: 'Motivação e Justificativa de Escolha',
+    resp_infraestrutura_tecnologica: 'Infraestrutura Tecnológica',
+    resp_infraestrutura_eletrica: 'Infraestrutura Elétrica',
+    resp_logistica_implantacao: 'Logística de Implantação',
+    resp_espaco_fisico: 'Espaço Físico',
+    resp_mobiliario: 'Mobiliário',
+
+    /* 1.7 — Recursos Materiais e Humanos */
     resp_necessidade_recursos_materiais_humanos: '1.7. Necessidade de Recursos Materiais e Humanos',
+
+    /* 1.8 / 1.9 — Gestão de Riscos e Independência */
     resp_estrategia_continuidade: '1.8. Estratégia de Continuidade da Solução',
     resp_estrategia_independencia_tjgo: '1.9. Estratégia de Independência do TJGO',
+
+    /* 1.10 — Transição Contratual */
     resp_acoes_transicao: '1.10. Ações para Transição Contratual e Encerramento',
+
+    /* 1.11 — Viabilidade Econômica */
     resp_viabilidade_economica_contratacao: '1.11. Análise sobre a Viabilidade Econômica da Contratação',
+
+    /* 1.13 — Aprovação */
     resp_aprovacao_assinatura_estudo_tecnico: '1.13. Aprovação e Assinatura do Estudo Técnico Preliminar',
 };
 
+/** Lista de seções ETP que suportam avaliação humana */
+export const EVALUABLE_ETP_SECTIONS = Object.keys(ETP_FIELD_LABELS);
+
 /** Labels amigáveis para os campos do TR */
 export const TR_FIELD_LABELS: Record<string, string> = {
-    resp_objeto_descricao: '1. OBJETO',
-    resp_objeto_lote: '1. OBJETO',
-    resp_objeto_item: '1. OBJETO',
-    resp_objeto_objeto: '1. OBJETO',
-    resp_objeto_quantidade: '1. OBJETO',
-    resp_objeto_unidade: '1. OBJETO',
-    resp_justificativa: '2. FUNDAMENTAÇÃO E JUSTIFICATIVA DA CONTRATAÇÃO',
-    resp_beneficios_objetivos: '2. FUNDAMENTAÇÃO E JUSTIFICATIVA DA CONTRATAÇÃO',
-    resp_do_agrupamento_do_objeto: '3. DO AGRUPAMENTO DO OBJETO',
-    resp_caracteristicas_especificacoes_objeto: '4. CARACTERÍSTICAS E ESPECIFICAÇÕES DO OBJETO (DESCREVER DETALHADAMENTE)',
-    resp_vigencia_local_prazo_entrega: '5. VIGÊNCIA, LOCAL E PRAZO DE ENTREGA',
-    resp_proposta_de_precos: '7. PROPOSTA DE PREÇOS',
-    resp_plano_aquisicao_contratacao_distribuicao: '8. PLANO DE AQUISIÇÃO / CONTRATAÇÃO / DISTRIBUIÇÃO',
-    resp_obrigacoes_contratada: '9. DAS OBRIGAÇÕES DA CONTRATADA',
-    resp_prevenc_consciencia_combate_racismo: '9.1. DA PREVENÇÃO, CONSCIENTIZAÇÃO E COMBATE AO RACISMO',
-    resp_prevenc_enfrentamento_assedio_moral: '9.2. DA PREVENÇÃO E ENFRENTAMENTO DO ASSÉDIO MORAL, DO ASSÉDIO SEXUAL E DA DISCRIMINAÇÃO',
-    resp_protecao_dados: '9.3. DA PROTEÇÃO DE DADOS',
-    resp_crit_sustentabilidade: '9.4. DOS CRITÉRIOS DE SUSTENTABILIDADE',
-    resp_reserva_cargos: '9.5. DA RESERVA DE CARGOS',
-    resp_obrigacoes_contratante: '10. DAS OBRIGAÇÕES DA CONTRATANTE',
-    resp_infracoes_sancoes_administrativas: '11. DAS INFRAÇÕES E SANÇÕES ADMINISTRATIVAS',
-    resp_subcontratacao: '12. DA SUBCONTRATAÇÃO',
-    resp_vedacao_participacao: '13. DA VEDAÇÃO DA PARTICIPAÇÃO DE PESSOA JURÍDICA EM CONSÓRCIO',
-    resp_habilitacao: '14. DA HABILITAÇÃO',
-    resp_habilitacao_qualificacao_economica: '14.3. QUALIFICAÇÃO ECONÔMICO-FINANCEIRA:',
-    resp_habilitacao_qualificacao_tecnica: '14.4. QUALIFICAÇÃO TÉCNICA',
-    resp_forma_pagamento: '15. FORMA DE PAGAMENTO',
-    resp_valores_estimados: '16. DOS VALORES ESTIMADOS',
-    resp_documentos_complementares: '17. DOCUMENTOS COMPLEMENTARES',
+    /* Objeto da Contratação */
+    resp_objeto_descricao: 'Detalhamento Técnico do Objeto (Tabela)',
+    resp_objeto_lote: 'Lote',
+    resp_objeto_item: 'Item',
+    resp_objeto_objeto: 'Objeto/Especificação',
+    resp_objeto_quantidade: 'Quantidade',
+    resp_objeto_unidade: 'Unidade de Medida',
+
+    /* Fundamentação e Benefícios */
+    resp_justificativa: 'Fundamentação e Justificativa da Contratação',
+    resp_beneficios_objetivos: 'Benefícios e Resultados Esperados',
+    resp_do_agrupamento_do_objeto: 'Do Agrupamento do Objeto',
+
+    /* Especificações e Prazos */
+    resp_caracteristicas_especificacoes_objeto: 'Características e Especificações do Objeto',
+    resp_perfil_exigido_profissionais: 'Perfil Exigido dos Profissionais',
+    resp_garantia_contratual: 'Garantia Contratual',
+    resp_amostra_poc: 'Apresentação de Amostra ou Realização de POC',
+    resp_vistoria: 'Vistoria',
+    resp_vigencia_local_prazo_entrega: 'Vigência, Local e Prazo de Entrega',
+    resp_proposta_de_precos: 'Proposta de Preços',
+    resp_plano_aquisicao_contratacao_distribuicao: 'Plano de Aquisição, Contratação ou Distribuição',
+
+    /* Obrigações e Políticas Sociais */
+    resp_obrigacoes_contratada: 'Obrigações da Contratada',
+    resp_obrigacoes_contratante: 'Obrigações da Contratante',
+    resp_prevenc_consciencia_combate_racismo: 'Prevenção, Conscientização e Combate ao Racismo',
+    resp_prevenc_enfrentamento_assedio_moral: 'Prevenção e Enfrentamento do Assédio (Moral e Sexual) e Discriminação',
+    resp_protecao_dados: 'Proteção de Dados (LGPD)',
+    resp_crit_sustentabilidade: 'Critérios de Sustentabilidade',
+    resp_reserva_cargos: 'Reserva de Cargos',
+
+    /* Sanções e Participação */
+    resp_infracoes_sancoes_administrativas: 'Infrações e Sanções Administrativas',
+    resp_subcontratacao: 'Subcontratação',
+    resp_vedacao_participacao: 'Vedação da Participação de Pessoa Jurídica em Consórcio',
+
+    /* Habilitação e Qualificação */
+    resp_habilitacao: 'Habilitação Geral',
+    resp_habilitacao_qualificacao_economica: 'Qualificação Econômico-Financeira',
+    resp_habilitacao_qualificacao_tecnica: 'Qualificação Técnica',
+
+    /* Valores e Pagamento */
+    resp_forma_pagamento: 'Forma de Pagamento',
+    resp_valores_estimados: 'Valores Estimados',
+
+    /* Documentos e Anexos */
+    resp_documentos_complementares: 'Documentos Complementares',
 };
+
+/** Lista de seções TR que suportam avaliação humana */
+export const EVALUABLE_TR_SECTIONS = Object.keys(TR_FIELD_LABELS);

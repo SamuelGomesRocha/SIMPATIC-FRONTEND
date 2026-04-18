@@ -59,3 +59,32 @@
 .doc-nav-bar__divider--active {
     background: var(--gov-blue-light);
 }
+
+.doc-nav-bar__step--loading {
+    color: var(--gov-blue-primary);
+    cursor: pointer;
+}
+
+.doc-nav-bar__step--loading .doc-nav-bar__label {
+    animation: navLabelPulse 1.5s infinite ease-in-out;
+}
+
+.doc-nav-bar__spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--gray-300);
+    border-top: 2px solid var(--gov-blue-primary);
+    border-radius: 50%;
+    animation: navSpinner 0.8s linear infinite;
+}
+
+@keyframes navSpinner {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes navLabelPulse {
+    0% { opacity: 0.6; }
+    50% { opacity: 1; }
+    100% { opacity: 0.6; }
+}

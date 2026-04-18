@@ -67,6 +67,12 @@
   --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
   --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.15);
 
+  /* Cores primárias - Aliases para componentes */
+  --primary-50: #EDF5FF;
+  --primary-100: #D4E4F7;
+  --primary-200: #C5D4EB;
+  --primary-300: #9BB8D9;
+
   /* Transições */
   --transition-fast: 150ms ease;
   --transition-normal: 250ms ease;
@@ -802,9 +808,24 @@ body {
   color: var(--gov-blue-primary);
   font-size: var(--font-size-xs);
   font-weight: 700;
-  padding: 2px 8px;
+  padding: 4px 8px;
   border-radius: var(--border-radius-sm);
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Marca: Assistente de IA */
+.suggestion-option__index--ai {
+  background: var(--gov-blue-lightest);
+  color: var(--gov-blue-primary);
+}
+
+/* Marca: Padrão */
+.suggestion-option__index--standard {
+  background: var(--gov-green-light);
+  color: var(--gov-green-dark);
 }
 
 .suggestion-option__text {
@@ -812,6 +833,7 @@ body {
   color: #0000ff;
   line-height: 1.6;
   flex: 1;
+  white-space: pre-wrap;
 }
 
 /* Edição customizada */
@@ -876,6 +898,10 @@ body {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
+}
+
+.pe-section--blue .pe-section__header {
+  background: linear-gradient(135deg, var(--gov-blue-dark) 0%, var(--gov-blue-primary) 100%);
 }
 
 .pe-section__body {
@@ -1157,7 +1183,7 @@ body {
 }
 
 .main-content--wide {
-  max-width: 1420px;
+  max-width: 95vw;
 }
 
 /* ============================================
@@ -1232,3 +1258,151 @@ body {
   min-height: 24px;
   gap: 4px;
 }
+
+/* ============================================
+   Contract Mode Toggle (Segmented Control)
+   ============================================ */
+
+.contract-mode-toggle {
+  display: flex;
+  background: var(--gray-100);
+  border-radius: var(--border-radius-full);
+  padding: 4px;
+  gap: 4px;
+  width: fit-content;
+  margin: 0 auto var(--spacing-xl) auto;
+  border: 1px solid var(--gray-200);
+}
+
+.contract-mode-toggle__option {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border: none;
+  border-radius: var(--border-radius-full);
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  background: transparent;
+  color: var(--gray-600);
+}
+
+.contract-mode-toggle__option:hover {
+  color: var(--gov-blue-primary);
+}
+
+.contract-mode-toggle__option--active {
+  background: var(--white);
+  color: var(--gov-blue-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+/* ============================================
+   PDF Upload Fields
+   ============================================ */
+
+.upload-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+}
+
+.upload-field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xl) var(--spacing-lg);
+  border: 2px dashed var(--gray-300);
+  border-radius: var(--border-radius-lg);
+  background: var(--gray-50);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: center;
+  min-height: 120px;
+}
+
+.upload-field:hover {
+  border-color: var(--gov-blue-primary);
+  background: var(--gov-blue-lightest);
+}
+
+.upload-field--filled {
+  border-color: var(--gov-green-primary);
+  border-style: solid;
+  background: var(--gov-green-light);
+}
+
+.upload-field--filled:hover {
+  border-color: var(--gov-green-dark);
+  background: var(--gov-green-light);
+}
+
+.upload-field__icon {
+  color: var(--gray-400);
+  transition: color var(--transition-fast);
+}
+
+.upload-field:hover .upload-field__icon {
+  color: var(--gov-blue-primary);
+}
+
+.upload-field--filled .upload-field__icon {
+  color: var(--gov-green-primary);
+}
+
+.upload-field__label {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+.upload-field__hint {
+  font-size: var(--font-size-xs);
+  color: var(--gray-500);
+}
+
+.upload-field__filename {
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--gov-green-dark);
+  word-break: break-all;
+  max-width: 100%;
+}
+
+.upload-field__input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.upload-field__remove {
+  position: absolute;
+  top: var(--spacing-xs);
+  right: var(--spacing-xs);
+  background: var(--gov-red);
+  color: var(--white);
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: var(--font-size-xs);
+  line-height: 1;
+  opacity: 0.8;
+  transition: opacity var(--transition-fast);
+  z-index: 2;
+}
+
+.upload-field__remove:hover {
+  opacity: 1;
+}

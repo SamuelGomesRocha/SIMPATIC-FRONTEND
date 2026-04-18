@@ -6,10 +6,11 @@ import LoadingPage from './pages/LoadingPage';
 import ResultPage from './pages/ResultPage';
 import ETPResultPage from './pages/ETPResultPage';
 import TRResultPage from './pages/TRResultPage';
-import type { DemandaInput, DODResponse, ETPInput, ETPResponse, TRInput, TRResponse, LogEntry } from './types';
+import type { DemandaInput, DODResponse, DODApiResponse, ETPInput, ETPResponse, TRInput, TRResponse, LogEntry, FieldSelection } from './types';
 import { submitDemanda } from './api/dodService';
 import { submitETP } from './api/etpService';
 import { submitTR } from './api/trService';
+import { submitStandardExtraction } from './api/standardService';
 import { generateId, getSelectedValue } from './utils/helpers';
 import DocumentNavBar from './components/layout/DocumentNavBar';
 import type { CurrentDocument } from './components/layout/DocumentNavBar';
@@ -17,80 +18,140 @@ import './styles/global.css';
 
 type AppScreen = 'form' | 'loading' | 'result' | 'etp-loading' | 'etp-result' | 'tr-loading' | 'tr-result';
 
+type DocStatus = 'idle' | 'loading' | 'success' | 'error';
+
 /**
  * Componente raiz da aplicação.
  * Gerencia o fluxo entre Formulário → Carregamento DOD → Resultado DOD → Carregamento ETP → Resultado ETP.
  */
 export default function App() {
   const [screen, setScreen] = useState<AppScreen>('form');
-  const [logs, setLogs] = useState<LogEntry[]>([]);
+  const [activeTab, setActiveTab] = useState<CurrentDocument>('DOD');
+
+  // Status de carregamento individuais
+  const [dodStatus, setDodStatus] = useState<DocStatus>('idle');
+  const [etpStatus, setEtpStatus] = useState<DocStatus>('idle');
+  const [trStatus, setTrStatus] = useState<DocStatus>('idle');
+
+  // Logs individuais
+  const [dodLogs, setDodLogs] = useState<LogEntry[]>([]);
+  const [etpLogs, setEtpLogs] = useState<LogEntry[]>([]);
+  const [trLogs, setTrLogs] = useState<LogEntry[]>([]);
+
   const [dodResponse, setDodResponse] = useState<DODResponse | null>(null);
   const [etpResponse, setEtpResponse] = useState<ETPResponse | null>(null);
   const [trResponse, setTrResponse] = useState<TRResponse | null>(null);
   const [formData, setFormData] = useState<DemandaInput | null>(null);
+
+  /** trace_id retornado pela API (habilita avaliação humana) */
+  const [dodTraceId, setDodTraceId] = useState<string | null>(null);
+  const [etpTraceId, setEtpTraceId] = useState<string | null>(null);
+  const [trTraceId, setTrTraceId] = useState<string | null>(null);
+
   // Store intermediate inputs
   const [etpInputData, setEtpInputData] = useState<ETPInput | null>(null);
 
-  /** Calculate completed docs for the navigation bar */
-  const completedDocs: CurrentDocument[] = [];
-  if (dodResponse) completedDocs.push('DOD');
-  if (etpResponse) completedDocs.push('ETP');
-  if (trResponse) completedDocs.push('TR');
+  // Flag if the process went via fast-track Standard Extraction
+  const [isStandardMode, setIsStandardMode] = useState<boolean>(false);
 
-  /** Handle navigation between completed documents */
-  const handleNav = (doc: CurrentDocument) => {
-    if (doc === 'DOD' && dodResponse) setScreen('result');
-    if (doc === 'ETP' && etpResponse) setScreen('etp-result');
-    if (doc === 'TR' && trResponse) setScreen('tr-result');
-  };
-
-  /** Adiciona uma entrada ao console de logs */
+  /** Adiciona uma entrada ao console de logs de um documento específico */
   const addLog = useCallback(
-    (message: string, type: LogEntry['type'] = 'info') => {
-      setLogs((prev) => [
-        ...prev,
-        {
-          id: generateId(),
-          timestamp: new Date(),
-          message,
-          type,
-        },
-      ]);
+    (message: string, doc: CurrentDocument, type: LogEntry['type'] = 'info') => {
+      const newEntry = {
+        id: generateId(),
+        timestamp: new Date(),
+        message,
+        type,
+      };
+
+      if (doc === 'DOD') setDodLogs((prev) => [...prev, newEntry]);
+      if (doc === 'ETP') setEtpLogs((prev) => [...prev, newEntry]);
+      if (doc === 'TR') setTrLogs((prev) => [...prev, newEntry]);
     },
     []
   );
 
-  /** Callback do formulário → dispara a requisição DOD */
+  /** Callback do formulário Nova Demanda → dispara a requisição DOD (Fluxo RAG) */
   const handleFormSubmit = useCallback(
     async (data: DemandaInput) => {
+      setIsStandardMode(false);
       setFormData(data);
-      setScreen('loading');
-      setLogs([]);
-      addLog('Iniciando processo de geração de sugestões do DOD...', 'info');
+      setScreen('result');
+      setActiveTab('DOD');
+      setDodStatus('loading');
+      setDodLogs([]);
+      addLog('Iniciando processo de geração de sugestões do DOD via modelo RAG...', 'DOD', 'info');
 
       try {
-        addLog(`Demanda: ${data.demanda_unidade} | PCA: ${data.pca}`, 'info');
+        addLog(`Demanda: ${data.demanda_unidade} | PCA: ${data.pca}`, 'DOD', 'info');
 
-        const result = await submitDemanda(data, (msg, type) => addLog(msg, type));
+        const result: DODApiResponse = await submitDemanda(data, (msg, type) => addLog(msg, 'DOD', type));
 
-        addLog('Todas as sugestões do DOD foram recebidas com sucesso!', 'success');
-        setDodResponse(result);
-
-        setTimeout(() => {
-          setScreen('result');
-        }, 1200);
+        addLog('Todas as sugestões do DOD foram recebidas com sucesso!', 'DOD', 'success');
+        setDodTraceId(result.trace_id);
+        setDodResponse(result.texto_gerado);
+        setDodStatus('success');
       } catch (error) {
-        const errorMsg =
-          error instanceof Error ? error.message : 'Erro desconhecido';
-        addLog(`Falha: ${errorMsg}`, 'error');
-        addLog(
-          'Verifique a conexão com a API e tente novamente. Use o botão ⚙ API no cabeçalho para configurar.',
-          'warning'
-        );
+        const errorMsg = error instanceof Error ? error.message : 'Erro desconhecido';
+        addLog(`Falha: ${errorMsg}`, 'DOD', 'error');
+        addLog('Verifique a conexão com a API e tente novamente.', 'DOD', 'warning');
+        setDodStatus('error');
+      }
+    },
+    [addLog]
+  );
 
-        setTimeout(() => {
-          setScreen('form');
-        }, 4000);
+  /** Callback do formulário Contratação Repetida → dispara a requisição Fast-Track */
+  const handleStandardSubmit = useCallback(
+    async (files: { dod: File; etp: File; tr: File }) => {
+      setIsStandardMode(true);
+      setScreen('result');
+      setActiveTab('DOD');
+      
+      // All three are processing simultaneously
+      setDodStatus('loading');
+      setEtpStatus('loading');
+      setTrStatus('loading');
+      
+      setDodLogs([]);
+      setEtpLogs([]);
+      setTrLogs([]);
+
+      // We share the logs across all three to provide equivalent loading experience 
+      // (though the user will likely just watch DOD)
+      const broadcastLog = (msg: string, type: 'info' | 'success' | 'warning' | 'error' = 'info') => {
+          addLog(msg, 'DOD', type);
+          addLog(msg, 'ETP', type);
+          addLog(msg, 'TR', type);
+      };
+
+      try {
+        broadcastLog('Iniciando extração e estruturação em lote via Inteligência Artificial...', 'info');
+
+        const result = await submitStandardExtraction(files, broadcastLog);
+
+        broadcastLog('Todos os documentos foram estruturados com sucesso!', 'success');
+        
+        // Populate all responses at once
+        setDodResponse(result.dod);
+        setEtpResponse(result.etp);
+        setTrResponse(result.tr);
+
+        // Standard process doesn't currently generate trace_ids for the evaluation module
+        setDodTraceId(null);
+        setEtpTraceId(null);
+        setTrTraceId(null);
+
+        // Mark all as successful so they are accessible in the UI immediately
+        setDodStatus('success');
+        setEtpStatus('success');
+        setTrStatus('success');
+      } catch (error) {
+        const errorMsg = error instanceof Error ? error.message : 'Erro desconhecido';
+        broadcastLog(`Falha na extração de padrão: ${errorMsg}`, 'error');
+        setDodStatus('error');
+        setEtpStatus('error');
+        setTrStatus('error');
       }
     },
     [addLog]
@@ -98,26 +159,40 @@ export default function App() {
 
   /** 
    * Callback "Confirmar Edição" do DOD → dispara requisição ETP 
-   * Monta o corpo da requisição combinando dados do formulário + sugestões selecionadas do DOD
+   * (Apenas no fluxo RAG)
    */
   const handleConfirmDODEditing = useCallback(
-    async (selections: Record<string, import('./types').FieldSelection>) => {
+    async (selections: Record<string, FieldSelection>) => {
       if (!dodResponse || !formData) return;
 
-      setScreen('etp-loading');
-      setLogs([]);
-      addLog('Preparando dados do DOD editado para geração do ETP...', 'info');
+      setEtpStatus('loading');
+      setEtpLogs([]);
+      setActiveTab('ETP'); 
+      addLog('Preparando dados do DOD editado para geração do ETP...', 'ETP', 'info');
 
       try {
-        // Helper to get the selected value for a field
         const getVal = (key: string): string[] => {
           let suggestions: string[] = [];
+
+          // Se for um subcampo do Planejamento Estratégico, tentamos usar o campo agregado
           if (key.startsWith('planejamento_estrategico.')) {
             const subKey = key.split('.')[1];
             suggestions = ((dodResponse.planejamento_estrategico as unknown) as Record<string, string[]>)[subKey] || [];
+            
+            const aggregatedSelection = selections['planejamento_estrategico'];
+            if (aggregatedSelection) {
+              // Se houver edição manual no campo agregado, enviamos o texto todo para cada campo (ou apenas para o primeiro)
+              // Aqui optamos por enviar para todos para garantir que a informação chegue ao backend
+              if (aggregatedSelection.isEditing && aggregatedSelection.customValue) {
+                return [aggregatedSelection.customValue];
+              }
+              // Se não houver edição, usamos o índice selecionado no campo agregado para pegar a sugestão original do subcampo
+              return [suggestions[aggregatedSelection.selectedIndex] || ''];
+            }
           } else {
             suggestions = ((dodResponse as unknown) as Record<string, string[]>)[key] || [];
           }
+
           const selected = getSelectedValue(key, suggestions, selections);
           return [selected];
         };
@@ -139,29 +214,18 @@ export default function App() {
         };
 
         setEtpInputData(etpInput);
-        addLog(`Enviando DOD editado para geração do ETP...`, 'info');
+        addLog(`Enviando DOD editado para geração do ETP...`, 'ETP', 'info');
 
-        const result = await submitETP(etpInput, (msg, type) => addLog(msg, type));
+        const result = await submitETP(etpInput, (msg, type) => addLog(msg, 'ETP', type));
 
-        addLog('Todas as sugestões do ETP foram recebidas com sucesso!', 'success');
-        setEtpResponse(result);
-
-        setTimeout(() => {
-          setScreen('etp-result');
-        }, 1200);
+        addLog('Todas as sugestões do ETP foram recebidas com sucesso!', 'ETP', 'success');
+        setEtpTraceId(result.trace_id);
+        setEtpResponse(result.texto_gerado);
+        setEtpStatus('success');
       } catch (error) {
-        const errorMsg =
-          error instanceof Error ? error.message : 'Erro desconhecido';
-        addLog(`Falha: ${errorMsg}`, 'error');
-        addLog(
-          'Verifique a conexão com a API e tente novamente.',
-          'warning'
-        );
-
-        // Volta ao resultado do DOD após 4s de erro
-        setTimeout(() => {
-          setScreen('result');
-        }, 4000);
+        const errorMsg = error instanceof Error ? error.message : 'Erro desconhecido';
+        addLog(`Falha: ${errorMsg}`, 'ETP', 'error');
+        setEtpStatus('error');
       }
     },
     [addLog, dodResponse, formData]
@@ -169,59 +233,62 @@ export default function App() {
 
   /** 
    * Callback "Confirmar Edição" do ETP → dispara requisição TR 
+   * (Apenas no fluxo RAG)
    */
   const handleConfirmETPEditing = useCallback(
-    async (selections: Record<string, import('./types').FieldSelection>) => {
+    async (selections: Record<string, FieldSelection>) => {
       if (!etpResponse || !etpInputData) return;
 
-      setScreen('tr-loading');
-      setLogs([]);
-      addLog('Preparando dados do ETP editado para geração do TR...', 'info');
+      setTrStatus('loading');
+      setTrLogs([]);
+      setActiveTab('TR');
+      addLog('Preparando dados do ETP editado para geração do TR...', 'TR', 'info');
 
       try {
         const getVal = (key: string): any => {
           let suggestions: any[] = [];
-          // Se for um campo sub-nível do objeto ETP
           if (key.match(/^resp_alternativa_\d+$/)) {
             suggestions = (etpResponse.resp_avaliacao_diferentes_solucoes_disponiveis as any)?.[key]?.resp_descricao || [];
             return getSelectedValue(key, suggestions, selections);
           }
-
           if (['resp_periodo_analisado', 'resp_termos_analisados', 'resp_metodologia_de_calculo'].includes(key)) {
             suggestions = (etpResponse.resp_avaliacao_diferentes_solucoes_disponiveis as any)?.[key] || [];
             return getSelectedValue(key, suggestions, selections);
           }
-
-          if (['resp_parcelas_fornecimento', 'resp_quantitativo_bens_servicos', 'resp_motivacao_justificativa_escolha'].includes(key)) {
+          if (key === 'resp_motivacao_justificativa_escolha') {
             suggestions = (etpResponse.resp_justificativa_escola_solucao_de_ti as any)?.[key] || [];
             return getSelectedValue(key, suggestions, selections);
           }
-
-          if (['resp_relacao_necessidade_volumes', 'resp_forma_calculo_quantitativo', 'resp_natureza_objeto', 'resp_modalidade_tipo_licitacao', 'resp_parcelamento_objeto', 'resp_vigencia_contrato'].includes(key)) {
+          if (key === 'resp_forma_calculo_quantitativo') {
+            const val = selections[key]?.customValue;
+            try {
+              return val ? JSON.parse(val) : [];
+            } catch {
+              return [];
+            }
+          }
+          if (['resp_relacao_necessidade_volumes', 'resp_natureza_objeto', 'resp_modalidade_tipo_licitacao', 'resp_parcelamento_objeto', 'resp_vigencia_contrato'].includes(key)) {
             suggestions = (etpResponse.resp_relacao_demanda_prevista_e_quantidade as any)?.[key] || [];
             return getSelectedValue(key, suggestions, selections);
           }
-
           if (['resp_infraestrutura_tecnologica', 'resp_infraestrutura_eletrica', 'resp_logistica_implantacao', 'resp_espaco_fisico', 'resp_mobiliario'].includes(key)) {
             suggestions = (etpResponse.resp_necessidades_adequacao_ambiente as any)?.[key] || [];
             return getSelectedValue(key, suggestions, selections);
           }
-
           if (['resp_mni', 'resp_icp_brasil', 'resp_moreq_jus'].includes(key)) {
+            const unifiedSelection = selections['resp_padroes_interoperabilidade'];
             suggestions = (etpResponse.resp_requisitos_padroes_interoperabilidade as any)?.[key] || [];
+            
+            // Se houver uma seleção no campo unificado, usamos o mesmo índice para os subcampos
+            if (unifiedSelection) {
+              return suggestions[unifiedSelection.selectedIndex] || suggestions[0] || '';
+            }
             return getSelectedValue(key, suggestions, selections);
           }
-
-          // Se for um campo de matriz de objetos (passamos exatamente o que veio no selectedIndex se for o objeto todo)
           if (['resp_necessidade_recursos_materiais_humanos', 'resp_estrategia_continuidade', 'resp_estrategia_independencia_tjgo', 'resp_acoes_transicao'].includes(key)) {
             suggestions = (etpResponse as any)[key] || [];
-            // Aqui selections[key] contém selectedIndex que é o índice do array, mas como a estrutura é grande,
-            // para arrays de objetos o frontend apenas "confirmou", vamos enviar o array completo como foi recebido na API.
-            // Ajuste: Vamos retornar o array todo como está na API.
             return suggestions;
           }
-
-          // Campos simples
           suggestions = (etpResponse as any)[key] || [];
           return [getSelectedValue(key, suggestions, selections)];
         };
@@ -243,12 +310,10 @@ export default function App() {
           resp_outros_requisitos: getVal('resp_outros_requisitos'),
           resp_viabilidade_economica_contratacao: getVal('resp_viabilidade_economica_contratacao'),
           resp_aprovacao_assinatura_estudo_tecnico: getVal('resp_aprovacao_assinatura_estudo_tecnico'),
-
           resp_necessidade_recursos_materiais_humanos: getVal('resp_necessidade_recursos_materiais_humanos'),
           resp_estrategia_continuidade: getVal('resp_estrategia_continuidade'),
           resp_estrategia_independencia_tjgo: getVal('resp_estrategia_independencia_tjgo'),
           resp_acoes_transicao: getVal('resp_acoes_transicao'),
-
           resp_requisitos_padroes_interoperabilidade: {
             resp_mni: [getVal('resp_mni')],
             resp_icp_brasil: [getVal('resp_icp_brasil')],
@@ -265,13 +330,11 @@ export default function App() {
             resp_alternativa_5: { resp_descricao: [getVal('resp_alternativa_5')] }
           },
           resp_justificativa_escola_solucao_de_ti: {
-            resp_parcelas_fornecimento: [getVal('resp_parcelas_fornecimento')],
-            resp_quantitativo_bens_servicos: [getVal('resp_quantitativo_bens_servicos')],
             resp_motivacao_justificativa_escolha: [getVal('resp_motivacao_justificativa_escolha')]
           },
           resp_relacao_demanda_prevista_e_quantidade: {
             resp_relacao_necessidade_volumes: [getVal('resp_relacao_necessidade_volumes')],
-            resp_forma_calculo_quantitativo: [getVal('resp_forma_calculo_quantitativo')],
+            resp_forma_calculo_quantitativo: getVal('resp_forma_calculo_quantitativo'),
             resp_natureza_objeto: [getVal('resp_natureza_objeto')],
             resp_modalidade_tipo_licitacao: [getVal('resp_modalidade_tipo_licitacao')],
             resp_parcelamento_objeto: [getVal('resp_parcelamento_objeto')],
@@ -286,28 +349,18 @@ export default function App() {
           }
         };
 
-        addLog(`Enviando ETP editado para geração do TR...`, 'info');
+        addLog(`Enviando ETP editado para geração do TR...`, 'TR', 'info');
 
-        const result = await submitTR(trInput, (msg, type) => addLog(msg, type));
+        const result = await submitTR(trInput, (msg, type) => addLog(msg, 'TR', type));
 
-        addLog('Todas as sugestões do TR foram recebidas com sucesso!', 'success');
-        setTrResponse(result);
-
-        setTimeout(() => {
-          setScreen('tr-result');
-        }, 1200);
+        addLog('Todas as sugestões do TR foram recebidas com sucesso!', 'TR', 'success');
+        setTrTraceId(result.trace_id);
+        setTrResponse(result.texto_gerado);
+        setTrStatus('success');
       } catch (error) {
-        const errorMsg =
-          error instanceof Error ? error.message : 'Erro desconhecido';
-        addLog(`Falha: ${errorMsg}`, 'error');
-        addLog(
-          'Verifique a conexão com a API e tente novamente.',
-          'warning'
-        );
-
-        setTimeout(() => {
-          setScreen('etp-result');
-        }, 4000);
+        const errorMsg = error instanceof Error ? error.message : 'Erro desconhecido';
+        addLog(`Falha: ${errorMsg}`, 'TR', 'error');
+        setTrStatus('error');
       }
     },
     [addLog, etpResponse, etpInputData]
@@ -316,73 +369,91 @@ export default function App() {
   /** Volta ao formulário para nova demanda */
   const handleReset = useCallback(() => {
     setScreen('form');
+    setDodStatus('idle');
+    setEtpStatus('idle');
+    setTrStatus('idle');
+    setDodLogs([]);
+    setEtpLogs([]);
+    setTrLogs([]);
     setDodResponse(null);
+    setDodTraceId(null);
     setEtpResponse(null);
+    setEtpTraceId(null);
     setTrResponse(null);
+    setTrTraceId(null);
     setFormData(null);
     setEtpInputData(null);
-    setLogs([]);
+    setIsStandardMode(false);
   }, []);
 
-  const isWideScreen = screen === 'result' || screen === 'etp-result' || screen === 'tr-result';
+  const handleTabSwitch = (doc: CurrentDocument) => {
+    setActiveTab(doc);
+  };
+
+  const isWideScreen = screen === 'result';
+  const completedDocs: CurrentDocument[] = [];
+  if (dodStatus === 'success') completedDocs.push('DOD');
+  if (etpStatus === 'success') completedDocs.push('ETP');
+  if (trStatus === 'success') completedDocs.push('TR');
+
+  const loadingDocs: CurrentDocument[] = [];
+  if (dodStatus === 'loading') loadingDocs.push('DOD');
+  if (etpStatus === 'loading') loadingDocs.push('ETP');
+  if (trStatus === 'loading') loadingDocs.push('TR');
 
   return (
     <div className="app-layout">
       <Header />
 
       <main className={`main-content ${isWideScreen ? 'main-content--wide' : ''}`}>
-        {screen === 'form' && <FormPage onSubmit={handleFormSubmit} />}
+        {screen === 'form' && <FormPage onSubmit={handleFormSubmit} onSubmitStandard={handleStandardSubmit} />}
 
-        {screen === 'loading' && (
-          <LoadingPage logs={logs} docType="DOD" />
-        )}
-
-        {screen === 'result' && dodResponse && (
+        {screen === 'result' && (
           <>
             <DocumentNavBar
-              currentDoc="DOD"
+              currentDoc={activeTab}
               completedDocs={completedDocs}
-              onNavigate={handleNav}
+              loadingDocs={loadingDocs}
+              onNavigate={handleTabSwitch}
             />
-            <ResultPage
-              response={dodResponse}
-              onReset={handleReset}
-              onConfirmEditing={handleConfirmDODEditing}
-            />
-          </>
-        )}
 
-        {screen === 'etp-loading' && (
-          <LoadingPage logs={logs} docType="ETP" />
-        )}
+            {activeTab === 'DOD' && (
+              dodStatus === 'loading' ? (
+                <LoadingPage logs={dodLogs} docType="DOD" />
+              ) : dodResponse && (
+                <ResultPage
+                  response={dodResponse}
+                  onReset={handleReset}
+                  onConfirmEditing={isStandardMode ? undefined : handleConfirmDODEditing}
+                  traceId={dodTraceId}
+                />
+              )
+            )}
 
-        {screen === 'etp-result' && etpResponse && (
-          <>
-            <DocumentNavBar
-              currentDoc="ETP"
-              completedDocs={completedDocs}
-              onNavigate={handleNav}
-            />
-            <ETPResultPage
-              response={etpResponse}
-              onReset={handleReset}
-              onConfirmEditing={handleConfirmETPEditing}
-            />
-          </>
-        )}
+            {activeTab === 'ETP' && (
+              etpStatus === 'loading' ? (
+                <LoadingPage logs={etpLogs} docType="ETP" />
+              ) : etpResponse && (
+                <ETPResultPage
+                  response={etpResponse}
+                  onReset={handleReset}
+                  onConfirmEditing={isStandardMode ? undefined : handleConfirmETPEditing}
+                  traceId={etpTraceId}
+                />
+              )
+            )}
 
-        {screen === 'tr-loading' && (
-          <LoadingPage logs={logs} docType="TR" />
-        )}
-
-        {screen === 'tr-result' && trResponse && (
-          <>
-            <DocumentNavBar
-              currentDoc="TR"
-              completedDocs={completedDocs}
-              onNavigate={handleNav}
-            />
-            <TRResultPage response={trResponse} onReset={handleReset} />
+            {activeTab === 'TR' && (
+              trStatus === 'loading' ? (
+                <LoadingPage logs={trLogs} docType="TR" />
+              ) : trResponse && (
+                <TRResultPage
+                  response={trResponse}
+                  onReset={handleReset}
+                  traceId={trTraceId}
+                />
+              )
+            )}
           </>
         )}
       </main>

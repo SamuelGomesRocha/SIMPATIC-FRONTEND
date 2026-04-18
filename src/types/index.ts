@@ -37,6 +37,42 @@ export interface DODResponse {
 }
 
 /**
+ * Novo contrato de resposta da API /recommend_dod (com persistência de trace)
+ */
+export interface DODApiResponse {
+    trace_id: string;
+    texto_gerado: DODResponse;
+}
+
+/**
+ * Payload para POST /evaluation/evaluate
+ */
+export interface DocumentEvaluationPayload {
+    trace_id: string;
+    section_name: string;
+    document_type: 'DOD' | 'ETP' | 'TR';
+    evaluator_id: string;
+    is_context_relevant: 0 | 1;
+    is_answer_faithful: 0 | 1;
+    is_answer_relevant: 0 | 1;
+    score_strategic_alignment: 1 | 2 | 3 | 4 | 5;
+    score_clarity: 1 | 2 | 3 | 4 | 5;
+    expert_comments: string;
+}
+
+/**
+ * Estado interno do formulário de avaliação humana (ARES)
+ */
+export interface EvaluationFormData {
+    is_context_relevant: 0 | 1 | null;
+    is_answer_faithful: 0 | 1 | null;
+    is_answer_relevant: 0 | 1 | null;
+    score_strategic_alignment: number;
+    score_clarity: number;
+    expert_comments: string;
+}
+
+/**
  * Corpo de entrada para a requisição do ETP
  * Combina os dados do formulário base (DemandaInput) com os campos do DOD editados
  */
@@ -81,9 +117,21 @@ export interface AvaliacaoDiferentesSolucoes {
  * Sub-estrutura para Justificativa de escolha da Solução
  */
 export interface JustificativaEscolhaSolucao {
-    resp_parcelas_fornecimento: string[];
-    resp_quantitativo_bens_servicos: string[];
     resp_motivacao_justificativa_escolha: string[];
+}
+
+export interface ItemFormaCalculo {
+    item: string;
+    estimativa_qtd: string;
+    forma_estimativa: string;
+}
+
+export interface ItemObjetoTR {
+    item: string;
+    objeto: string;
+    quantidade: string;
+    metrica: string;
+    unidade: string;
 }
 
 /**
@@ -91,7 +139,7 @@ export interface JustificativaEscolhaSolucao {
  */
 export interface RelacaoDemandaPrevista {
     resp_relacao_necessidade_volumes: string[];
-    resp_forma_calculo_quantitativo: string[];
+    resp_forma_calculo_quantitativo: ItemFormaCalculo[];
     resp_natureza_objeto: string[];
     resp_modalidade_tipo_licitacao: string[];
     resp_parcelamento_objeto: string[];
@@ -147,6 +195,14 @@ export interface ETPResponse {
 }
 
 /**
+ * Contrato de resposta da API /recommend_etp (com persistência de trace)
+ */
+export interface ETPApiResponse {
+    trace_id: string;
+    texto_gerado: ETPResponse;
+}
+
+/**
  * Representa a seleção do usuário para cada campo editável
  */
 export interface FieldSelection {
@@ -154,6 +210,22 @@ export interface FieldSelection {
     selectedIndex: number;
     customValue?: string;
     isEditing: boolean;
+}
+
+/**
+ * Origem de um item de sugestão na Visão Simplificada
+ * - 'ai': gerado via requisição à API (Assistente de IA)
+ * - 'standard': texto padrão oriundo de doc_models/standard_texts/
+ */
+export type SuggestionSource = 'ai' | 'standard';
+
+/**
+ * Item de sugestão enriquecido com metadado de origem.
+ * Substitui o uso de `string[]` puro no SuggestionField.
+ */
+export interface SuggestionItem {
+    text: string;
+    source: SuggestionSource;
 }
 
 /**
@@ -224,6 +296,10 @@ export interface TRResponse {
     resp_beneficios_objetivos: string[];
     resp_do_agrupamento_do_objeto: string[];
     resp_caracteristicas_especificacoes_objeto: string[];
+    resp_perfil_exigido_profissionais: string[];
+    resp_garantia_contratual: string[];
+    resp_amostra_poc: string[];
+    resp_vistoria: string[];
     resp_vigencia_local_prazo_entrega: string[];
     resp_proposta_de_precos: string[];
     resp_plano_aquisicao_contratacao_distribuicao: string[];
@@ -243,4 +319,28 @@ export interface TRResponse {
     resp_forma_pagamento: string[];
     resp_valores_estimados: string[];
     resp_documentos_complementares: string[];
+}
+
+/**
+ * Contrato de resposta da API /recommend_tr (com persistência de trace)
+ */
+export interface TRApiResponse {
+    trace_id: string;
+    texto_gerado: TRResponse;
+}
+
+/**
+ * Tipo de contratação: fluxo completo via RAG ou fast-track via extração de PDF
+ */
+export type ContractMode = 'nova' | 'repetida';
+
+/**
+ * Resposta consolidada do endpoint POST /standard/extract
+ * Retorna os 3 documentos de uma vez a partir de PDFs preexistentes
+ */
+export interface StandardExtractResponse {
+    dod: DODResponse;
+    etp: ETPResponse;
+    tr: TRResponse;
+    metadata_extracao: Record<string, any>;
 }

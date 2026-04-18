@@ -16,9 +16,9 @@ import FontSizeExtension from './FontSizeExtension';
 import EditorToolbar from './EditorToolbar';
 import { useMemo, useEffect, useRef } from 'react';
 import type { DODResponse, FieldSelection } from '../../../types';
-import { getSelectedValue } from '../../../utils/helpers';
 // @ts-ignore
 import dodHtmlRaw from '../../../../doc_models/1. Documento de Oficializacao da Demanda (html).html?raw';
+import { exportDocument, generatePopulatedHtml } from '../../../utils/exportService';
 
 interface RichTextCanvasProps {
     response: DODResponse;
@@ -74,75 +74,45 @@ export default function RichTextCanvas({
 }: RichTextCanvasProps) {
 
     const initialContent = useMemo(() => {
-        // Helper to get selected value for a field
-        const getVal = (key: string) => {
-            let suggestions: string[] = [];
-            if (key.startsWith('planejamento_estrategico.')) {
-                const subKey = key.split('.')[1];
-                suggestions = ((response.planejamento_estrategico as unknown) as Record<string, string[]>)[subKey] || [];
-            } else {
-                suggestions = ((response as unknown) as Record<string, string[]>)[key] || [];
-            }
-            return getSelectedValue(key, suggestions, selections);
+        const html = generatePopulatedHtml('DOD', response, selections);
+
+        // Adicionar tags data-field que o editor usa para tracking
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+
+        const fieldMapping: Record<string, string> = {
+            '.resp_nome_do_projeto': 'nome_projeto',
+            '.resp_data_envio': 'data_envio',
+            '.resp_identificacao_demanda': 'identificacao_pca',
+            '.resp_alinhamento_loa': 'alinhamento_loa',
+            '.resp_fonte_recurso': 'fonte_recurso',
+            '.resp_motivacao_justificativa': 'motivacao_justificativa',
+            '.resp_resultados_beneficios': 'resultados_beneficios',
+            '.resp_plano_gestao': 'planejamento_estrategico.plano_gestao',
+            '.resp_plano_anual': 'planejamento_estrategico.plano_anual_contratacoes',
+            '.resp_pdtic': 'planejamento_estrategico.pdtic',
         };
 
-        let text = dodHtmlRaw;
-        // Fix malformed classes: class="western" class="resp_..." -> class="western resp_..."
-        text = text.replace(/class="([^"]+)"\s+class="([^"]+)"/g, 'class="$1 $2"');
-
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(text, 'text/html');
-
-        const replacements = [
-            { selector: '.resp_nome_do_projeto', field: 'nome_projeto' },
-            { selector: '.resp_data_envio', field: 'data_envio' },
-            { selector: '.resp_identificacao_demanda', field: 'identificacao_pca' },
-            { selector: '.resp_alinhamento_loa', field: 'alinhamento_loa' },
-            { selector: '.resp_fonte_recurso', field: 'fonte_recurso' },
-            { selector: '.resp_motivacao_justificativa', field: 'motivacao_justificativa' },
-            { selector: '.resp_resultados_beneficios', field: 'resultados_beneficios' },
-            { selector: '.resp_plano_gestao', field: 'planejamento_estrategico.plano_gestao' },
-            { selector: '.resp_plano_anual', field: 'planejamento_estrategico.plano_anual_contratacoes' },
-        ];
-
-        replacements.forEach(rep => {
-            const el = doc.querySelector(rep.selector);
-            if (el) {
-                el.innerHTML = getVal(rep.field);
-                el.setAttribute('data-field', rep.field);
-                // ensure parent td or element passes cursor events easily if possible
-            }
+        Object.entries(fieldMapping).forEach(([selector, fieldKey]) => {
+            const el = doc.querySelector(selector);
+            if (el) el.setAttribute('data-field', fieldKey);
         });
 
-        const listItems = doc.querySelectorAll('li p, p');
-        listItems.forEach(p => {
-            if (p.textContent?.includes('Plano Diretor de Tecnologia da Informação e Comunicação (PDTIC):')) {
-                const spans = p.querySelectorAll('span, font');
-                spans.forEach(span => {
-                    if (span.textContent?.includes('apresentar') && span.textContent?.includes('descrição')) {
-                        span.innerHTML = getVal('planejamento_estrategico.pdtic');
-                        span.setAttribute('data-field', 'planejamento_estrategico.pdtic');
-                    }
-                });
-            }
-            if (p.textContent?.includes('(ENTIC-JUD):')) {
-                const spans = p.querySelectorAll('span, font');
-                spans.forEach(span => {
-                    if (span.textContent?.includes('apresentar') && span.textContent?.includes('descrição')) {
-                        span.innerHTML = getVal('planejamento_estrategico.entic_jud');
-                        span.setAttribute('data-field', 'planejamento_estrategico.entic_jud');
-                    }
-                });
+        // Entic Jud tagging
+        doc.querySelectorAll('p, span, font').forEach(el => {
+            if (el.textContent?.includes('Transformação Digital') || el.closest('li')?.textContent?.includes('ENTIC-JUD')) {
+                // Se o texto parece vir do ENTIC-JUD ou está no local dele
+                if (el.innerHTML.length > 20) { // heurística simples
+                    el.setAttribute('data-field', 'planejamento_estrategico.entic_jud');
+                }
             }
         });
-
-        doc.querySelectorAll('script').forEach(s => s.remove());
 
         return `
         <div class="document-canvas-content">
             ${doc.body.innerHTML}
         </div>`;
-    }, [response, selections]); // Will recount initialContent if selections mutate, but TipTap manages its own state
+    }, [response, selections]);
 
     const editor = useEditor({
         extensions: [

@@ -10,11 +10,11 @@
 .document-editor__body {
     display: flex;
     gap: 2rem;
-    width: 70vw;
+    width: 90vw;
     /* User requested ~70% of the screen */
-    min-width: 1000px;
+    min-width: 60vw;
     /* Ensure a minimum usable width */
-    max-width: 1600px;
+    max-width: 90vw;
     justify-content: center;
     align-items: flex-start;
     padding: 1rem 0;
@@ -22,16 +22,17 @@
 }
 
 .document-canvas {
-    flex: 1;
+    flex: none;
     /* Take available space */
-    min-width: 0;
+    min-width: 21cm;
     /* Allow shrinking if needed */
-    max-width: 850px;
+    max-width: 21cm;
     /* Controlled width for readability */
+    margin: 2rem auto;
     background-color: white;
     box-shadow: var(--shadow-xl);
     min-height: 1160px;
-    padding: 1.27cm 2cm;
+    padding: 2.5cm 2cm;
     position: relative;
     font-family: 'Times New Roman', serif;
     font-size: 12px;
@@ -68,7 +69,7 @@
 .suggestions-sidebar {
     width: 420px;
     flex-shrink: 0;
-    display: flex;
+    display: none;
     flex-direction: column;
     gap: 1rem;
     position: sticky;
@@ -190,12 +191,23 @@
 .document-canvas table {
     border-collapse: collapse;
     margin: 1rem 0;
-    width: 100%;
+    width: 100% !important;
+    /* Força a se ajustar ao papel */
+    table-layout: fixed;
+    /* Impede que células 'empurrem' a margem */
+    word-break: break-word;
+    /* Evita estouro de texto */
 }
 
 .document-canvas td {
     border: 1px solid var(--gray-400);
     padding: 8px;
+    word-wrap: break-word;
+    /* Reforça a quebra de linha */
+    overflow-wrap: break-word;
+    /* Reforça a quebra de linha */
+    max-width: 0;
+    /* Truque de layout fixo para forçar quebra */
 }
 
 .document-canvas h3 {

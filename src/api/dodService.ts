@@ -1,18 +1,17 @@
-import type { ApiConfig, DemandaInput, DODResponse } from '../types';
-import { API_URL_STORAGE_KEY, API_KEY_STORAGE_KEY, API_MODEL_STORAGE_KEY, API_ENVIRONMENT_STORAGE_KEY, DEFAULT_API_URL, DEFAULT_API_TIMEOUT, DEFAULT_API_MODEL, DEFAULT_API_ENVIRONMENT } from '../config/constants';
+import type { ApiConfig, DemandaInput, DODApiResponse } from '../types';
+import { API_KEY_STORAGE_KEY, API_MODEL_STORAGE_KEY, API_ENVIRONMENT_STORAGE_KEY, DEFAULT_API_URL, DEFAULT_API_TIMEOUT, DEFAULT_API_MODEL, DEFAULT_API_ENVIRONMENT } from '../config/constants';
 import homologDod from '../homolog-documents/homolog-dod';
 
 /**
  * Retorna a configuração atual da API
  */
 export function getApiConfig(): ApiConfig {
-    const savedUrl = localStorage.getItem(API_URL_STORAGE_KEY);
     const savedApiKey = localStorage.getItem(API_KEY_STORAGE_KEY);
     const savedModel = localStorage.getItem(API_MODEL_STORAGE_KEY);
     const savedEnv = localStorage.getItem(API_ENVIRONMENT_STORAGE_KEY);
 
     return {
-        baseUrl: savedUrl || DEFAULT_API_URL,
+        baseUrl: `${DEFAULT_API_URL}`,
         timeout: DEFAULT_API_TIMEOUT,
         apiKey: savedApiKey || undefined,
         model: savedModel || DEFAULT_API_MODEL,
@@ -34,18 +33,12 @@ export function getApiEnvironment(): 'producao' | 'homologacao' {
     return (localStorage.getItem(API_ENVIRONMENT_STORAGE_KEY) as 'producao' | 'homologacao') || DEFAULT_API_ENVIRONMENT;
 }
 
-/**
- * Salva a URL da API no localStorage
- */
-export function setApiUrl(url: string): void {
-    localStorage.setItem(API_URL_STORAGE_KEY, url);
-}
 
 /**
- * Retorna a URL da API salva
+ * Retorna a URL da API padrão
  */
 export function getApiUrl(): string {
-    return localStorage.getItem(API_URL_STORAGE_KEY) || DEFAULT_API_URL;
+    return `${DEFAULT_API_URL}/recommend_dod`;
 }
 
 /**
@@ -70,10 +63,18 @@ export function setApiModel(model: string): void {
 }
 
 /**
- * Retorna o modelo do Gemini salvo
+ * Retorna o modelo do Gemini salvo com validação e migração
  */
 export function getApiModel(): string {
-    return localStorage.getItem(API_MODEL_STORAGE_KEY) || DEFAULT_API_MODEL;
+    let model = localStorage.getItem(API_MODEL_STORAGE_KEY) || DEFAULT_API_MODEL;
+
+    // Migração de identificadores antigos ou parciais do Gemini 3.1
+    if (model === 'gemini-3.1-flash-lite' || model === 'models/gemini-3.1-flash-lite') {
+        model = 'models/gemini-3.1-flash-lite-preview';
+        localStorage.setItem(API_MODEL_STORAGE_KEY, model);
+    }
+
+    return model;
 }
 
 /**
@@ -82,17 +83,19 @@ export function getApiModel(): string {
 export async function submitDemanda(
     data: DemandaInput,
     onLog?: (message: string, type: 'info' | 'success' | 'warning' | 'error') => void
-): Promise<DODResponse> {
+): Promise<DODApiResponse> {
     const config = getApiConfig();
 
     if (config.environment === 'homologacao') {
         onLog?.('Ambiente de Homologação detectado. Carregando dados locais...', 'info');
         await new Promise(resolve => setTimeout(resolve, 1500)); // Simula latência
         onLog?.('Dados de homologação carregados com sucesso!', 'success');
-        return homologDod as DODResponse;
+        // Gerar trace_id mock para homologação
+        const mockTraceId = crypto.randomUUID ? crypto.randomUUID() : `homolog-${Date.now()}`;
+        return { trace_id: mockTraceId, texto_gerado: homologDod } as DODApiResponse;
     }
 
-    const url = `${config.baseUrl}`;
+    const url = `${config.baseUrl}/recommend_dod`;
 
     onLog?.('Preparando dados da requisição...', 'info');
 
@@ -122,11 +125,23 @@ export async function submitDemanda(
         }
 
         onLog?.('Resposta recebida com sucesso!', 'success');
-        onLog?.('Processando sugestões...', 'info');
+        onLog?.('Processando documento e trace...', 'info');
 
-        const result: DODResponse = await response.json();
+        const raw = await response.json();
 
-        onLog?.('Sugestões processadas com sucesso!', 'success');
+        // Normaliza a resposta: o backend pode retornar no formato envelope
+        // { trace_id, texto_gerado } ou diretamente os campos do DOD no nível raiz.
+        let result: DODApiResponse;
+        if (raw.texto_gerado && raw.trace_id) {
+            result = raw as DODApiResponse;
+        } else {
+            const traceId = raw.trace_id || `dod-${Date.now()}`;
+            const textoGerado = raw.texto_gerado || raw;
+            result = { trace_id: traceId, texto_gerado: textoGerado };
+            onLog?.('Resposta normalizada (formato direto detectado).', 'info');
+        }
+
+        onLog?.(`Documento gerado com trace_id: ${result.trace_id}`, 'success');
 
         return result;
     } catch (error) {

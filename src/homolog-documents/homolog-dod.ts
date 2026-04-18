@@ -2,56 +2,18 @@
  * Dados de homologação para o DOD
  */
 const homologDod = {
-    "nome_projeto": [
-        "Aquisição de Equipamentos de Tecnologia da Informação e Comunicação (Notebooks) para o Poder Judiciário do Estado de Goiás",
-        "Modernização da Infraestrutura de Tecnologia da Informação e Comunicação: Aquisição de Notebooks",
-        "Projeto de Aquisição de Notebooks para Suporte às Atividades Judiciárias e Administrativas"
-    ],
-    "data_envio": [
-        "2025-09-01",
-        "2025-10-15",
-        "2025-11-01"
-    ],
-    "identificacao_pca": [
-        "PCA-2026-001",
-        "Referente ao Plano de Contratações Anual de TIC - 2026, item PCA-2026-001",
-        "Demanda identificada no Plano de Contratações Anual de TIC - 2026, sob o código PCA-2026-001"
-    ],
-    "fonte_recurso": [
-        "TJGO – Tribunal de Justiça do Estado de Goiás"
-    ],
-    "alinhamento_loa": [
-        "A presente contratação está prevista na Lei Orçamentária Anual (LOA) vigente, com dotação orçamentária específica para investimentos em tecnologia da informação.",
-        "A despesa decorrente desta demanda está devidamente contemplada na Lei Orçamentária Anual (LOA) de 2026, alocada em rubrica de investimento em infraestrutura de TIC.",
-        "O investimento em aquisição de notebooks está alinhado com as prioridades orçamentárias estabelecidas na LOA, visando a modernização dos recursos tecnológicos do Poder Judiciário."
-    ],
-    "motivacao_justificativa": [
-        "A aquisição de notebooks visa suprir a necessidade de equipamentos modernos e eficientes para a execução das atividades judiciárias e administrativas, garantindo a continuidade e a qualidade dos serviços prestados à sociedade. A obsolescência de equipamentos atuais compromete a produtividade e a segurança da informação.",
-        "A demanda surge da necessidade de renovação e ampliação do parque tecnológico do Poder Judiciário do Estado de Goiás, com o objetivo de prover aos servidores ferramentas adequadas para o desempenho de suas funções, impactando diretamente na agilidade e na precisão dos processos.",
-        "A presente contratação justifica-se pela necessidade de atualização tecnológica para atender às crescentes demandas por desempenho e mobilidade, assegurando que os usuários tenham acesso a equipamentos que suportem as aplicações e sistemas em uso, bem como futuras atualizações."
-    ],
-    "resultados_beneficios": [
-        "Aumento da produtividade e eficiência dos servidores através da utilização de equipamentos mais rápidos e confiáveis; Padronização do parque tecnológico, facilitando a gestão e o suporte técnico; Redução de custos com manutenção de equipamentos obsoletos; Melhoria na segurança da informação.",
-        "Otimização dos fluxos de trabalho; Ampliação da capacidade de processamento e armazenamento de dados; Maior agilidade na execução de tarefas; Garantia de acesso a softwares e sistemas atualizados; Contribuição para a sustentabilidade ambiental através da aquisição de equipamentos com maior eficiência energética.",
-        "Melhoria na experiência do usuário final; Redução do tempo de inatividade por falhas de equipamento; Suporte a novas tecnologias e aplicações; Fortalecimento da infraestrutura de TIC para o alcance dos objetivos estratégicos do órgão; Padronização de configurações e softwares para otimização do suporte."
-    ],
+    "nome_projeto": ["Aquisição de solução de armazenamento de dados (storage) de alta performance para o Data Center do TJGO"],
+    "data_envio": ["15/01/2026"],
+    "identificacao_pca": ["PCA 251 – DIT – Aquisição de solução de armazenamento de dados (storage) para modernização do Data Center – Plano Anual de Contratações de TIC – 2026."],
+    "alinhamento_loa": ["Lei Orçamentária Anual nº 24.019, de 06 de janeiro de 2026."],
+    "fonte_recurso": ["TJGO – Tribunal de Justiça do Estado de Goiás."],
+    "motivacao_justificativa": ["A presente demanda fundamenta-se na necessidade imperativa de modernização da infraestrutura de armazenamento de dados do Tribunal de Justiça do Estado de Goiás. Atualmente, o parque tecnológico de storages enfrenta o esgotamento do ciclo de vida útil e o encerramento dos contratos de suporte e garantia, o que coloca em risco a disponibilidade e a integridade dos dados institucionais. A expansão das competências digitais do Tribunal, aliada à implementação de novos sistemas judiciários e administrativos, demanda uma infraestrutura de armazenamento robusta, escalável e de alta performance. A ausência de atualização compromete a celeridade processual e a eficiência dos serviços prestados às unidades judiciárias e ao público externo. Adicionalmente, esta contratação é estratégica para viabilizar a infraestrutura do novo datacenter do TJGO, garantindo a continuidade dos serviços críticos e a resiliência do ambiente de TI. Diante do exposto, a aquisição visa mitigar riscos operacionais, assegurar a conformidade com os padrões de segurança da informação e garantir a sustentabilidade tecnológica necessária para o cumprimento da missão institucional. Formaliza-se, portanto, a demanda para início dos estudos técnicos pela Equipe de Planejamento da Contratação, em estrita observância à Resolução 468/2022 do CNJ."],
+    "resultados_beneficios": ["a) Aumento da disponibilidade e confiabilidade dos sistemas de informação do Tribunal; b) Garantia de suporte técnico especializado e manutenção preventiva para os ativos de armazenamento; c) Ampliação da capacidade de processamento e armazenamento para suportar o crescimento exponencial de dados judiciais; d) Melhoria na performance de acesso aos sistemas, resultando em maior celeridade na prestação jurisdicional; e) Padronização tecnológica do ambiente de datacenter, facilitando a gestão e reduzindo custos operacionais de manutenção; f) Mitigação de riscos de indisponibilidade por falhas de hardware ou obsolescência tecnológica."],
     "planejamento_estrategico": {
-        "plano_gestao": [
-            "Alinha-se ao objetivo de modernização da infraestrutura tecnológica do Poder Judiciário do Estado de Goiás, conforme previsto no Plano de Gestão, visando aprimorar a prestação jurisdicional e administrativa.",
-            "Contribui para a meta de aprimoramento da gestão administrativa e judiciária, por meio da disponibilização de ferramentas tecnológicas adequadas, conforme diretrizes do Plano de Gestão."
-        ],
-        "plano_anual_contratacoes": [
-            "A demanda está contemplada no Plano de Contratações Anual de TIC - 2026, sob o código PCA-2026-001, indicando a prioridade e o planejamento prévio para esta aquisição.",
-            "Esta contratação é um item planejado no Plano Anual de Contratações de TIC - 2026 (PCA-2026-001), assegurando a sua adequação às necessidades estratégicas e orçamentárias do órgão."
-        ],
-        "pdtic": [
-            "A aquisição de notebooks está em consonância com as diretrizes do Plano Diretor de Tecnologia da Informação e Comunicação (PDTIC), no que tange à renovação e modernização do parque tecnológico.",
-            "Visa atender às necessidades de infraestrutura de TIC estabelecidas no PDTIC, garantindo que os usuários disponham de equipamentos que suportem as soluções tecnológicas planejadas e em operação."
-        ],
-        "entic_jud": [
-            "Contribui para o alcance dos objetivos da Estratégia Nacional de Tecnologia da Informação e Comunicação do Poder Judiciário (ENTIC-JUD), especificamente no que se refere à modernização da infraestrutura e ao aprimoramento da gestão de TIC.",
-            "Alinha-se às metas da ENTIC-JUD relacionadas à infraestrutura tecnológica, promovendo a padronização e a eficiência no uso de recursos de TIC em todo o Poder Judiciário."
-        ]
+        "plano_gestao": ["Alinhado ao objetivo de promover a transformação digital e a eficiência administrativa, garantindo a infraestrutura necessária para a excelência na prestação jurisdicional."],
+        "plano_anual_contratacoes": ["A contratação está prevista no PCA 2026, atendendo ao planejamento orçamentário e às prioridades de investimento em infraestrutura de TIC do Tribunal."],
+        "pdtic": ["Em conformidade com as diretrizes de modernização da infraestrutura de TI, visando a sustentabilidade e a alta disponibilidade dos serviços de tecnologia da informação."],
+        "entic_jud": ["Alinhado ao eixo de infraestrutura tecnológica da ENTIC-JUD, que preconiza a atualização de ativos para assegurar a continuidade dos serviços e a segurança da informação no Poder Judiciário."]
     }
 };
 

@@ -1,24 +1,7 @@
-import type { ApiConfig, TRInput, TRResponse } from '../types';
-import { API_URL_STORAGE_KEY, API_KEY_STORAGE_KEY, API_MODEL_STORAGE_KEY, API_ENVIRONMENT_STORAGE_KEY, DEFAULT_API_URL, DEFAULT_API_TIMEOUT, DEFAULT_API_MODEL, DEFAULT_API_ENVIRONMENT } from '../config/constants';
+import type { TRInput, TRApiResponse } from '../types';
+import { getApiConfig } from './dodService';
 import homologTr from '../homolog-documents/homolog-tr';
 
-/**
- * Retorna a configuração atual da API para TR
- */
-function getApiConfig(): ApiConfig {
-    const savedUrl = localStorage.getItem(API_URL_STORAGE_KEY);
-    const savedApiKey = localStorage.getItem(API_KEY_STORAGE_KEY);
-    const savedModel = localStorage.getItem(API_MODEL_STORAGE_KEY);
-    const savedEnv = localStorage.getItem(API_ENVIRONMENT_STORAGE_KEY);
-
-    return {
-        baseUrl: savedUrl || DEFAULT_API_URL,
-        timeout: DEFAULT_API_TIMEOUT,
-        apiKey: savedApiKey || undefined,
-        model: savedModel || DEFAULT_API_MODEL,
-        environment: (savedEnv as 'producao' | 'homologacao') || DEFAULT_API_ENVIRONMENT,
-    };
-}
 
 /**
  * Envia os dados editados do ETP para a API do TR e retorna as sugestões
@@ -27,17 +10,18 @@ function getApiConfig(): ApiConfig {
 export async function submitTR(
     data: TRInput,
     onLog?: (message: string, type: 'info' | 'success' | 'warning' | 'error') => void
-): Promise<TRResponse> {
+): Promise<TRApiResponse> {
     const config = getApiConfig();
 
     if (config.environment === 'homologacao') {
         onLog?.('Ambiente de Homologação detectado. Carregando dados locais...', 'info');
         await new Promise(resolve => setTimeout(resolve, 1500)); // Simula latência
         onLog?.('Dados de homologação carregados com sucesso!', 'success');
-        return homologTr as TRResponse;
+        const mockTraceId = crypto.randomUUID ? crypto.randomUUID() : `homolog-tr-${Date.now()}`;
+        return { trace_id: mockTraceId, texto_gerado: homologTr } as TRApiResponse;
     }
 
-    const url = "http://localhost:8400/recommend_tr";
+    const url = `${config.baseUrl}/recommend_tr`;
 
     onLog?.('Preparando dados do ETP para geração do TR...', 'info');
 
@@ -69,9 +53,21 @@ export async function submitTR(
         onLog?.('Resposta recebida com sucesso!', 'success');
         onLog?.('Processando sugestões do TR...', 'info');
 
-        const result: TRResponse = await response.json();
+        const raw = await response.json();
 
-        onLog?.('Sugestões do Termo de Referência processadas!', 'success');
+        // Normaliza a resposta: o backend pode retornar no formato envelope
+        // { trace_id, texto_gerado } ou diretamente os campos do TR no nível raiz.
+        let result: TRApiResponse;
+        if (raw.texto_gerado && raw.trace_id) {
+            result = raw as TRApiResponse;
+        } else {
+            const traceId = raw.trace_id || `tr-${Date.now()}`;
+            const textoGerado = raw.texto_gerado || raw;
+            result = { trace_id: traceId, texto_gerado: textoGerado };
+            onLog?.('Resposta normalizada (formato direto detectado).', 'info');
+        }
+
+        onLog?.(`Documento TR gerado com trace_id: ${result.trace_id}`, 'success');
 
         return result;
     } catch (error) {
