@@ -344,3 +344,20 @@ export interface StandardExtractResponse {
     tr: TRResponse;
     metadata_extracao: Record<string, any>;
 }
+
+/**
+ * Dados da sessão ARCA retornados pelo endpoint GET /arca/session/{token}
+ */
+export interface ArcaSessionData {
+    pca: string;
+    demanda_unidade: string;
+    grau_prioridade: string;
+    justificativa: string;
+    valor_estimado: string;
+    modelo: string;
+    data_prevista: string;
+    investimento_custeio: string;
+    user_name: string;
+    user_id: string;
+    ambiente: 'producao' | 'homologacao';
+}

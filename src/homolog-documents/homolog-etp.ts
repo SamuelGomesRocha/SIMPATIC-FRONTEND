@@ -3,13 +3,13 @@
  */
 const homologEtp = {
     "resp_descricao_solucao": [
-        "Atualização da solução de armazenamento de dados (storage) para o TJGO, visando substituir equipamentos obsoletos e suportar a expansão do novo datacenter."
+        "Aquisição de equipamento de processamento de banco de dados (appliance) Oracle Exacc para expansão da infraestrutura de TIC do Tribunal de Justiça do Estado de Goiás."
     ],
     "resp_potenciais_usuarios": [
-        "A aquisição da solução de armazenamento de dados (storage) destina-se a atender às necessidades de diversas unidades do Tribunal de Justiça do Estado de Goiás (TJGO), com destaque para a Diretoria de Tecnologia da Informação e Comunicação (DTI), a Coordenadoria de Sistemas (COSIS) e a Coordenadoria de Infraestrutura Tecnológica (CITEC/DII), que são as principais gestoras e usuárias da infraestrutura de TIC. Adicionalmente, as demais diretorias e unidades de negócio que dependem de um armazenamento robusto e escalável para suas operações e sistemas críticos também serão beneficiadas. O perfil de uso da solução abrange desde a administração e manutenção da infraestrutura de armazenamento até a disponibilização de capacidade e desempenho para aplicações judiciais e administrativas essenciais, garantindo a continuidade dos serviços e a segurança dos dados institucionais."
+        "1) Usuários: Magistrados, servidores e colaboradores que utilizam sistemas críticos como Projudi, sistemas de gestão de recursos humanos e ferramentas de BI. 2) Unidades: Diretoria de Tecnologia da Informação (DTI), Coordenadoria de Infraestrutura Tecnológica e demais unidades administrativas e judiciárias do TJGO. 3) Gestores: Diretor da DTI e Gestor da Coordenadoria de Infraestrutura Tecnológica."
     ],
     "resp_requisitos_tecnologicos": [
-        "A nova solução de armazenamento de dados (storage) deverá ser de última geração, com arquitetura escalável e de alta disponibilidade, preferencialmente em configuração redundante (RAID) e com capacidade de expansão modular. Requer-se compatibilidade com os principais sistemas operacionais e virtualização em uso no TJGO, como VMware e sistemas baseados em Linux e Windows Server, com versões mínimas a serem especificadas em detalhamento posterior. A solução deverá suportar protocolos de armazenamento modernos, como iSCSI, Fibre Channel e NFS, garantindo alta performance e baixa latência para acesso aos dados. Certificações técnicas de fabricantes renomados no mercado de storage, que atestem a qualidade, segurança e confiabilidade dos equipamentos, serão exigidas. A arquitetura deverá ser compatível com o modelo on-premises, com vistas à consolidação e operacionalização do novo datacenter do TJGO, permitindo a integração com a infraestrutura existente e futura, incluindo soluções de backup e recuperação de desastres. A capacidade de armazenamento inicial deverá ser de, no mínimo, 500 TB utilizáveis, com possibilidade de expansão para até 2 PB, e throughput de leitura/escrita que atenda às demandas de aplicações críticas, com métricas de IOPS e latência a serem detalhadas no Termo de Referência. A solução deverá, ainda, contemplar recursos avançados de proteção de dados, como snapshots, replicação síncrona e assíncrona, e criptografia de dados em repouso e em trânsito, em conformidade com as melhores práticas de segurança da informação e a Lei Geral de Proteção de Dados (LGPD)."
+        "O equipamento deve ser um appliance Oracle Exacc, garantindo total compatibilidade com o ecossistema de banco de dados Oracle já existente no TJGO. Deve possuir arquitetura de alta performance, com redundância de componentes críticos (fontes, ventoinhas, controladoras), suporte a virtualização de alto desempenho e capacidade de escalabilidade horizontal e vertical. O hardware deve atender aos padrões de eficiência energética e processamento exigidos para cargas de trabalho de missão crítica, com suporte a protocolos de rede de alta velocidade e integração nativa com a infraestrutura de armazenamento do Tribunal."
     ],
     "resp_requisitos_legais": [
         ""
@@ -18,194 +18,184 @@ const homologEtp = {
         ""
     ],
     "resp_requisitos_capacitacao": [
-        "Será exigido da contratada a oferta de treinamento técnico especializado para a equipe de infraestrutura de TIC do TJGO, com carga horária mínima de 40 horas, ministrado por instrutores com certificações reconhecidas pelo fabricante da solução de storage. O treinamento deverá abranger a instalação, configuração, administração, manutenção e troubleshooting da solução, com foco na capacitação dos servidores responsáveis pela gestão do novo datacenter. O ambiente de treinamento deverá ser provido pela contratada, em formato presencial ou remoto, com material didático completo em português, incluindo manuais técnicos, guias de referência e laboratórios práticos. O público-alvo principal serão os Analistas de Suporte e Administração de Sistemas da DTI, com possibilidade de inclusão de outros profissionais de TI conforme necessidade identificada pela gestão do contrato."
+        "A contratada deverá fornecer treinamento técnico oficial para a equipe de infraestrutura do TJGO, com carga horária mínima de 40 horas, abrangendo instalação, configuração, administração e troubleshooting do equipamento Oracle Exacc. O treinamento deve ser ministrado por instrutores certificados pelo fabricante, em ambiente que simule a operação real, acompanhado de material didático completo e acesso a laboratórios práticos para os administradores de banco de dados e infraestrutura do Tribunal."
     ],
     "resp_requisitos_manutencao": [
-        "A contratada deverá oferecer suporte técnico especializado com níveis de serviço (SLA) claros e mensuráveis, definindo prazos de atendimento para diferentes níveis de criticidade: P1 (Crítico) com resposta em até 4 horas e resolução em até 24 horas; P2 (Alto) com resposta em até 8 horas e resolução em até 48 horas; P3 (Médio) com resposta em até 24 horas e resolução em até 5 dias úteis. A garantia dos equipamentos deverá ser on-site, com substituição de peças defeituosas em até 48 horas úteis. Deverá ser contemplada manutenção preventiva, corretiva, adaptativa e evolutiva, com atendimento via sistema de chamados online, e-mail institucional e telefone (0800), com abertura de chamados 24x7 para incidentes críticos. A contratada deverá disponibilizar acesso a portal de conhecimento do fabricante e fóruns de discussão técnica, além de relatórios periódicos de desempenho e status dos chamados abertos."
+        "A contratada deve assegurar suporte técnico 24x7, com atendimento on-site e garantia de peças (NBD - Next Business Day ou superior). Os SLAs devem ser: P1 (Crítico) com resposta em até 2 horas e solução em 4 horas; P2 (Alto) com resposta em 4 horas e solução em 8 horas; P3 (Médio/Baixo) com resposta em 8 horas e solução em 24 horas. A manutenção deve incluir suporte corretivo, preventivo e acesso a atualizações de firmware e software durante toda a vigência contratual, via portal do fabricante."
     ],
     "resp_requisitos_seguranca": [
-        "A contratada deverá firmar Termo de Sigilo e Confidencialidade, comprometendo-se a manter sigilo absoluto sobre todas as informações e dados aos quais tiver acesso em decorrência da execução contratual, em estrita conformidade com a Lei Geral de Proteção de Dados Pessoais (LGPD - Lei nº 13.709/2018) e as normativas de segurança da informação do Poder Judiciário. Deverão ser implementados controles de acesso rigorosos, com autenticação multifator e políticas de senhas fortes, para acesso remoto e local aos sistemas de gerenciamento do storage. A solução deverá garantir a segurança dos dados em repouso e em trânsito, com mecanismos de criptografia robustos e conformidade com os padrões de segurança estabelecidos pelo TJGO, incluindo a Política de Segurança da Informação (PSI) e, quando aplicável, as normas ABNT NBR ISO/IEC 27001 e 27002. A utilização de VPNs seguras será obrigatória para qualquer acesso remoto à infraestrutura do TJGO."
+        "A solução deve estar em conformidade com a Política de Segurança da Informação do TJGO (Decreto Judiciário nº 898/2022) e com a Lei Geral de Proteção de Dados (LGPD - Lei nº 13.709/2018). É obrigatória a assinatura de Termo de Confidencialidade e Sigilo. O equipamento deve suportar criptografia de dados em repouso e em trânsito, controle de acesso baseado em funções (RBAC), auditoria detalhada de logs de acesso e integração com sistemas de autenticação centralizada do Tribunal, garantindo a proteção contra acessos não autorizados."
     ],
     "resp_requisitos_social_cultural_sustentabilidade": [
-        "A contratação deverá observar o Plano de Logística Sustentável do TJGO 2021/2026, o Guia de Contratações Sustentáveis do Poder Judiciário e as diretrizes da Resolução CNJ nº 400/2021. Serão priorizados fornecedores que demonstrem compromisso com práticas de sustentabilidade ambiental, como o uso de materiais reciclados e de baixo impacto ambiental na fabricação dos equipamentos, a eficiência energética (com certificação Procel ou equivalente) e a destinação adequada de resíduos eletrônicos. Quanto à acessibilidade, a solução deverá, na medida do possível, atender aos requisitos da WCAG 2.1 no nível AA para interfaces de gerenciamento, e a contratada deverá apresentar políticas de inclusão e diversidade em seu quadro de colaboradores, em alinhamento com os princípios de responsabilidade social. A proposta deverá detalhar as ações mitigadoras para potenciais impactos ambientais negativos, conforme previsto na legislação pertinente."
+        "A contratada deve observar o Plano de Logística Sustentável do TJGO e o Guia de Contratações Sustentáveis do Poder Judiciário. O equipamento deve possuir certificações de eficiência energética (como Energy Star ou equivalente), ser livre de substâncias perigosas conforme diretiva RoHS e possuir embalagens recicláveis. A empresa deve comprovar ações de responsabilidade social e combate ao racismo, além de garantir a destinação ambientalmente adequada de resíduos eletrônicos ao final da vida útil do hardware, conforme Resolução CONAMA nº 257/1999."
     ],
     "resp_requisitos_niveis_servico": [
-        "Os níveis de serviço (SLA) deverão ser mensuráveis e vinculados diretamente ao faturamento, com indicadores de desempenho (KPIs) claros e objetivos, como tempo de resposta e resolução de incidentes, disponibilidade do sistema de armazenamento (uptime mínimo de 99,9%), e performance de throughput e IOPS. Serão estabelecidas faixas de glosa progressivas para o descumprimento dos SLAs acordados, com critérios de aceite claros para a liberação de pagamentos, condicionados ao cumprimento das metas estabelecidas. A avaliação do desempenho da contratada será realizada mensalmente, com base em relatórios de serviço e auditorias técnicas, garantindo a conformidade com os requisitos contratuais e a qualidade da prestação dos serviços."
+        "O nível de disponibilidade exigido para o equipamento é de 99,99% (quatro noves). Indicadores de desempenho (KPIs) incluirão o tempo médio de reparo (MTTR) e o tempo médio entre falhas (MTBF). O descumprimento dos SLAs ensejará a aplicação de glosas proporcionais ao tempo de indisponibilidade, conforme tabela de penalidades estabelecida no Termo de Referência, sendo o aceite definitivo condicionado à verificação da performance e estabilidade do hardware em ambiente de produção."
     ],
     "resp_requisitos_qualificacao_experiencia": [
-        "A empresa contratada deverá comprovar, por meio de no mínimo 2 (dois) atestados de capacidade técnica emitidos por órgãos públicos ou empresas de grande porte, experiência prévia na implementação e suporte de soluções de armazenamento de dados (storage) de alta performance e escalabilidade, com capacidade mínima de 500 TB. Deverão ser apresentadas certificações técnicas de seus prepostos nas tecnologias de armazenamento e virtualização a serem utilizadas, como VMware Certified Professional (VCP) e certificações de fabricantes de storage (ex: Dell EMC, NetApp, HPE). O porte mínimo da equipe técnica alocada deverá ser compatível com a complexidade do projeto, com um mínimo de 2 (dois) engenheiros de sistemas e 1 (um) gestor de projeto com experiência comprovada em contratos de grande vulto."
+        "A empresa licitante deve apresentar atestado de capacidade técnica, fornecido por pessoa jurídica de direito público ou privado, que comprove o fornecimento e suporte de equipamentos de processamento de dados de alta complexidade (appliance) de porte similar ao objeto. É exigida a comprovação de ser parceira autorizada do fabricante (Oracle) para comercialização e suporte técnico, com equipe técnica certificada e disponível para atendimento em território nacional."
     ],
     "resp_requisitos_formas_comunicacao": [
-        "A comunicação oficial com a empresa contratada se dará por meio do sistema de chamados eletrônicos do TJGO, e-mail institucional designado para a gestão do contrato, telefone institucional para contatos urgentes e reuniões periódicas de acompanhamento (semanais ou quinzenais), conforme cronograma a ser definido. Serão exigidos relatórios mensais de desempenho e status dos serviços prestados, além de visitas técnicas presenciais para avaliação da infraestrutura e suporte direto à equipe do TJGO, conforme necessidade e planejamento."
+        "A comunicação oficial entre o TJGO e a contratada ocorrerá por meio de sistema de chamados (portal de suporte), e-mail institucional, telefone (0800 ou número local) e reuniões periódicas de acompanhamento. A contratada deverá fornecer relatórios mensais de desempenho, disponibilidade e histórico de chamados, além de realizar visitas técnicas presenciais sempre que a complexidade da manutenção ou a criticidade do incidente assim o demandarem."
     ],
     "resp_requisitos_padroes_interoperabilidade": {
         "resp_mni": [
-            "A solução de armazenamento de dados deverá ser compatível com o Modelo Nacional de Interoperabilidade do Poder Judiciário (MNI-Jud), garantindo a troca de informações e a integração com outros sistemas e plataformas do Poder Judiciário, conforme diretrizes estabelecidas pelo Conselho Nacional de Justiça."
+            "O equipamento deve ser compatível com os padrões de integração do Modelo Nacional de Interoperabilidade do Judiciário, garantindo a fluidez dos dados processuais."
         ],
         "resp_icp_brasil": [
-            "Não se aplica ao objeto desta contratação."
+            "A solução deve suportar a integração com certificados digitais padrão ICP-Brasil para autenticação e acesso administrativo seguro ao equipamento."
         ],
         "resp_moreq_jus": [
-            "A solução de gerenciamento do storage deverá, na medida do possível, contemplar funcionalidades que facilitem a gestão e o controle de acesso aos dados, em conformidade com os princípios do MoReq-Jus para a gestão documental eletrônica, assegurando a integridade, autenticidade e rastreabilidade das informações armazenadas."
+            "O equipamento deve garantir a integridade e a preservação dos dados armazenados, em conformidade com os requisitos de gestão documental do MoReq-Jus."
         ]
     },
     "resp_outros_requisitos": [
-        "Os prazos de entrega dos equipamentos e a execução dos serviços de instalação e configuração deverão ser rigorosamente cumpridos, sob pena de aplicação de multas contratuais e sanções administrativas previstas na Lei nº 14.133/2021. A execução dos serviços poderá ser realizada de forma remota ou presencial, conforme a natureza da atividade e as normas internas do TJGO, com a contratada sendo responsável por todos os custos e providências para a realização de visitas técnicas e suporte presencial, quando necessário. A contratada será solidariamente responsável pela qualidade e integridade dos materiais fornecidos e dos serviços prestados, devendo garantir a sustentação dos padrões de qualidade contratados durante todo o período de vigência do contrato, incluindo a manutenção e atualização dos equipamentos e softwares, bem como o suporte técnico especializado."
+        "O prazo de entrega do equipamento é de até 60 dias após a emissão da Ordem de Fornecimento. A contratada é responsável pela entrega, instalação e testes de aceitação no datacenter do TJGO. A responsabilidade solidária por danos ao patrimônio durante a instalação é da contratada, que deve manter os padrões de qualidade e segurança exigidos pelo Tribunal durante toda a vigência do contrato."
     ],
     "resp_avaliacao_diferentes_solucoes_disponiveis": {
         "resp_periodo_analisado": [
-            "O presente levantamento de mercado abrange o período de maio de 2024 a junho de 2025, com foco na análise de contratações recentes e projeções de mercado para soluções de armazenamento de dados (storage). Foram consultados dados públicos de contratações realizadas por órgãos do Poder Judiciário e da Administração Pública Federal, bem como informações disponíveis em portais especializados e relatórios de mercado. A análise visa capturar as tendências tecnológicas e os valores praticados no mercado atual, considerando a necessidade de atualização e expansão da infraestrutura de TIC do TJGO, conforme delineado no Plano Anual de Contratações de TIC (PCA) de 2026."
+            "O levantamento de mercado foi conduzido no período compreendido entre janeiro e fevereiro de 2026, abrangendo a análise de contratações correlatas realizadas por órgãos do Poder Judiciário e da Administração Pública Federal. A pesquisa fundamentou-se na consulta a repositórios oficiais de compras governamentais, visando identificar a viabilidade técnica e a conformidade normativa das soluções de infraestrutura de processamento de dados disponíveis no mercado nacional e internacional, em estrita observância aos ditames da Lei nº 14.133/2021 e da Resolução CNJ nº 468/2022."
         ],
         "resp_termos_analisados": [
-            "Os termos-chave utilizados nas buscas abrangeram \"solução de armazenamento de dados\", \"storage enterprise\", \"sistema de armazenamento SAN/NAS\", \"aquisição de storage para datacenter\", \"equipamentos de storage para TI Judiciário\", \"contratação de storage com alta disponibilidade\", \"solução de armazenamento escalável\", \"storage para virtualização\", \"storage com deduplicação e compressão\", \"storage flash/híbrido\", \"software-defined storage (SDS)\", \"storage como serviço (STaaS)\", \"storage open source\", \"storage público\". As buscas foram direcionadas aos portais do PNCP (Painel Nacional de Contratações Públicas), ComprasNet, Connect-Jus, Banco de Preços do Governo Federal e a bases de dados de fornecedores e fabricantes de soluções de armazenamento."
+            "Para a prospecção de mercado, foram utilizados os seguintes termos-chave: 'Oracle Exadata', 'Appliance de Banco de Dados', 'Infraestrutura de Processamento de Alta Performance', 'Soluções de Convergência de Dados', 'Hardware de Processamento de Dados' e 'Sistemas de Armazenamento de Alta Disponibilidade'. As buscas foram realizadas nos portais PNCP (Portal Nacional de Contratações Públicas), ComprasNet, Banco de Preços do Governo Federal e no sistema Connect-Jus, garantindo a abrangência necessária para a formação de uma cesta de preços robusta e representativa."
         ],
         "resp_metodologia_de_calculo": [
-            "A metodologia de formação de preço adotada para a estimativa de custos desta contratação baseia-se na análise de preços unitários de soluções similares registradas em contratações públicas recentes, com especial atenção aos dados disponíveis no PNCP e ComprasNet. Foi aplicada a técnica de mediana, buscando-se a centralidade dos valores encontrados para mitigar distorções causadas por preços excessivamente altos ou baixos. Outliers significativos, que pudessem comprometer a representatividade da amostra, foram identificados e, quando justificável, excluídos da análise. Adicionalmente, foram considerados os custos totais de propriedade (TCO) projetados, incluindo aquisição, instalação, manutenção, suporte e consumo energético, conforme preconiza a Instrução Normativa SEGES/ME nº 65/2021, para garantir a economicidade e a eficiência da contratação. A análise comparativa de diferentes propostas e modelos de precificação também foi um fator determinante na formação do valor estimado."
+            "A metodologia de formação de preço seguiu as diretrizes estabelecidas pela IN SEGES/ME nº 65/2021, adotando-se a técnica de cesta de preços para a definição do valor estimado. Procedeu-se à coleta de preços praticados em contratações similares por outros entes públicos, aplicando-se o tratamento estatístico necessário para a exclusão de valores inexequíveis ou excessivamente elevados (outliers), garantindo a seleção da mediana como parâmetro de referência. Tal procedimento assegura a observância ao princípio da economicidade e a conformidade com as exigências de planejamento da Nova Lei de Licitações."
         ],
         "resp_fontes_consultadas": [
-            "PNCP (Painel Nacional de Contratações Públicas)",
-            "ComprasNet",
-            "Connect-Jus",
-            "Banco de Preços do Governo Federal",
-            "Relatórios de Mercado de Empresas de Pesquisa em TI",
-            "Catálogos de Fornecedores e Fabricantes de Soluções de Armazenamento",
-            "Documentos Históricos de Contratações do TJGO"
+            "Portal Nacional de Contratações Públicas (PNCP)",
+            "Painel de Preços do Governo Federal",
+            "Connect-Jus (CNJ)",
+            "Catálogo de Soluções de TIC do TJGO",
+            "Atas de Registro de Preços vigentes no Poder Judiciário"
         ],
         "resp_alternativa_1": {
             "resp_descricao": [
-                "A primeira alternativa de solução de armazenamento a ser considerada envolve a aquisição de um sistema de armazenamento em rede (SAN - Storage Area Network) de alta performance, com arquitetura convergente ou hiperconvergente, de um fabricante renomado no mercado, como Dell EMC, HPE, NetApp ou IBM. Esta solução tipicamente se apresenta em formato de appliances dedicados, com discos SSD e/ou NVMe para otimização de desempenho, e funcionalidades avançadas como deduplicação, compressão, snapshots, replicação e thin provisioning. O TCO projetado para esta alternativa considera o custo inicial do hardware, licenças de software, garantia estendida, serviços de instalação e configuração, além dos custos de manutenção anual e energia elétrica. A vantagem reside na robustez, escalabilidade e desempenho comprovados, ideais para suportar cargas de trabalho críticas e virtualizadas, como as utilizadas no ambiente do TJGO. A integração com a infraestrutura existente e a possibilidade de expansão modular são pontos fortes a serem avaliados, sempre em observância à Lei 14.133/2021, que preza pela eficiência e economicidade na gestão dos recursos públicos."
+                "A solução Oracle Exadata (Exacc) apresenta-se como um sistema de engenharia integrada, projetado especificamente para otimizar cargas de trabalho de banco de dados Oracle. Do ponto de vista técnico, destaca-se pela arquitetura de hardware e software otimizada, que permite a execução de consultas complexas com latência reduzida e alta taxa de transferência de dados, sendo amplamente reconhecida pela sua robustez em ambientes críticos de missão, como os sistemas Projudi e de gestão processual do TJGO.\n\nComo pontos positivos, ressalta-se a integração nativa entre o hardware e o software de banco de dados, o que simplifica a gestão e reduz a necessidade de ajustes finos manuais. Contudo, como pontos negativos, observa-se a dependência tecnológica do fabricante (vendor lock-in) e a necessidade de capacitação técnica especializada para a operação e manutenção do ambiente, fatores que devem ser mitigados por meio de contratos de suporte e garantia adequados, conforme preconiza a Resolução 468/2022 do CNJ."
             ]
         },
         "resp_alternativa_2": {
             "resp_descricao": [
-                "Uma segunda alternativa a ser explorada é a aquisição de uma solução de armazenamento baseada em software-defined storage (SDS), que oferece maior flexibilidade e abstração do hardware subjacente. Fabricantes como Nutanix, VMware (vSAN) ou soluções baseadas em Ceph poderiam ser consideradas. Neste modelo, o software de gerenciamento de armazenamento é desacoplado do hardware, permitindo a utilização de servidores commodity ou infraestrutura já existente para compor o pool de armazenamento. O TCO projetado para esta alternativa tende a ser mais competitivo a longo prazo, especialmente se houver aproveitamento de infraestrutura existente, com custos iniciais potencialmente menores em comparação com soluções proprietárias de appliance. A escalabilidade é um ponto forte, permitindo o crescimento linear da capacidade e do desempenho. A gestão centralizada e a automação de tarefas são benefícios adicionais. Contudo, a complexidade de implementação e a necessidade de expertise técnica para gerenciar a solução SDS devem ser cuidadosamente ponderadas, garantindo a conformidade com a LGPD (Lei 13.709/2018) no que tange à segurança e privacidade dos dados."
+                "A solução de infraestrutura hiperconvergente (HCI) baseada em servidores x86 de alto desempenho, utilizando tecnologias de armazenamento flash e virtualização de última geração, configura-se como uma alternativa de mercado. Esta abordagem permite a consolidação de diversos serviços em uma única plataforma, oferecendo flexibilidade na alocação de recursos computacionais e facilidade de expansão modular conforme a demanda do Tribunal cresce.\n\nOs pontos positivos incluem a maior flexibilidade na escolha de componentes de hardware e a possibilidade de evitar a dependência exclusiva de um único fabricante de software de banco de dados. Em contrapartida, os pontos negativos envolvem a complexidade na integração de múltiplos componentes de diferentes fornecedores e o desafio de atingir o mesmo nível de performance específica para bancos de dados Oracle, o que pode exigir esforços adicionais de tunning e configuração para garantir a estabilidade exigida pelo TJGO."
             ]
         },
         "resp_alternativa_3": {
             "resp_descricao": [
-                "A terceira alternativa a ser investigada abrange modelos de armazenamento como serviço (Storage as a Service - STaaS) ou soluções em nuvem pública (IaaS - Infrastructure as a Service) oferecidas por provedores como Amazon Web Services (AWS), Microsoft Azure ou Google Cloud Platform. Neste modelo, o TJGO pagaria pelo uso da capacidade de armazenamento e pelos serviços associados, em um modelo de assinatura ou consumo. O TCO projetado para esta alternativa pode apresentar uma redução significativa nos custos iniciais de aquisição de hardware, transformando o investimento de capital (CAPEX) em despesa operacional (OPEX). A escalabilidade é praticamente ilimitada e a gestão da infraestrutura é de responsabilidade do provedor. No entanto, é crucial analisar a latência, a segurança dos dados em ambiente compartilhado, a conformidade com a LGPD e a dependência de conectividade com a internet. A Resolução 468/2022 do CNJ, ao incentivar a adoção de soluções tecnológicas eficientes, pode ser um norte para a avaliação desta modalidade, desde que os riscos sejam devidamente mitigados e a soberania dos dados seja garantida."
+                "A adoção de modelos de infraestrutura em nuvem (Cloud Computing - IaaS/PaaS) representa uma alternativa contemporânea para a sustentação de bancos de dados. Esta modalidade permite a escalabilidade elástica, onde os recursos de processamento e armazenamento são ajustados dinamicamente conforme a carga de trabalho, eliminando a necessidade de aquisição e manutenção de ativos físicos de hardware pelo Tribunal.\n\nEntre os pontos positivos, destaca-se a redução da necessidade de gestão física de data centers e a agilidade na implementação de novos ambientes. Todavia, os pontos negativos incluem desafios significativos relacionados à soberania dos dados, latência de rede para sistemas críticos de baixa tolerância a falhas e a complexidade na conformidade com a LGPD (Lei nº 13.709/2018) em ambientes de nuvem pública, além da previsibilidade orçamentária ser mais complexa devido ao modelo de consumo variável."
             ]
         },
         "resp_alternativa_4": {
             "resp_descricao": [
-                "A análise de soluções de armazenamento baseadas em software livre (open source) representa a quarta alternativa. Projetos como Ceph, GlusterFS ou LVM (Logical Volume Manager) podem ser considerados. A principal vantagem reside na ausência de custos de licenciamento de software, o que pode reduzir drasticamente o investimento inicial. A comunidade ativa de desenvolvedores e usuários garante um ciclo de desenvolvimento contínuo e a disponibilidade de suporte através de fóruns e listas de discussão. A maturidade dessas soluções tem aumentado consideravelmente, com muitas delas sendo utilizadas em ambientes de grande escala. Contudo, a implementação e o suporte técnico podem demandar uma equipe interna altamente qualificada, e a garantia de suporte comercial pode ser um fator limitante para órgãos públicos que necessitam de níveis de serviço mais rigorosos. A integração com sistemas legados e a compatibilidade com hardware específico também devem ser cuidadosamente avaliadas, em conformidade com os princípios da Lei 14.133/2021, que busca a otimização dos recursos públicos."
+                "A utilização de bancos de dados baseados em Software Livre (como PostgreSQL ou MariaDB) em infraestrutura de servidores genéricos constitui uma alternativa de mercado focada na redução de custos de licenciamento. Esta solução é sustentada por uma vasta comunidade global de desenvolvedores e possui maturidade suficiente para suportar diversas aplicações de médio porte dentro da administração pública.\n\nOs pontos positivos residem na ausência de custos de licenciamento proprietário e na liberdade de customização do código-fonte. Entretanto, os pontos negativos incluem a necessidade de uma equipe interna altamente qualificada para suporte e manutenção, a ausência de suporte técnico oficial com SLA garantido (salvo contratação de empresas terceiras) e o risco de incompatibilidade com sistemas legados do TJGO que foram desenvolvidos especificamente para a arquitetura Oracle, tornando a migração um processo de alto risco e custo elevado."
             ]
         },
         "resp_alternativa_5": {
             "resp_descricao": [
-                "A quinta alternativa a ser considerada é a exploração do Catálogo do Software Público Brasileiro ou a busca por soluções compartilhadas via Interoperabilidade de Serviços (IRP) com outros Tribunais de Justiça ou órgãos públicos. O Catálogo do Software Público Brasileiro (Catálogo.Apps.Gov.Br) pode apresentar soluções de armazenamento desenvolvidas ou adaptadas para o setor público, com potencial de reutilização e customização. A participação em iniciativas de compartilhamento de soluções tecnológicas entre órgãos públicos, como as promovidas pelo Conselho Nacional de Justiça (CNJ) e pelo Ministério da Gestão e da Inovação em Serviços Públicos, pode resultar em contratos mais vantajosos, com custos reduzidos e maior agilidade na implantação. A análise de soluções já em uso por outros Tribunais, especialmente aquelas que já passaram por processos de licitação e validação, pode fornecer um benchmark valioso e reduzir os riscos inerentes a novas contratações. A Resolução 468/2022 do CNJ, ao fomentar a padronização e a interoperabilidade, incentiva a busca por este tipo de alternativa."
+                "A busca por soluções compartilhadas via IRP (Intenção de Registro de Preços) com outros Tribunais ou órgãos do Poder Judiciário visa o ganho de escala e a padronização tecnológica. Esta alternativa permite que o TJGO aproveite processos licitatórios já concluídos por outros entes, reduzindo o tempo de planejamento e os custos administrativos inerentes a uma nova licitação.\n\nOs pontos positivos incluem a economia processual e a possibilidade de compartilhar experiências de implementação com outras unidades judiciárias. Por outro lado, os pontos negativos envolvem a dificuldade de alinhar as necessidades específicas de configuração do TJGO com as especificações técnicas já definidas em atas de terceiros, além da dependência do cronograma e da disponibilidade de adesão por parte do órgão gerenciador da ata, o que pode comprometer o planejamento estratégico da unidade de TIC."
             ]
         }
     },
     "resp_justificativa_escola_solucao_de_ti": {
-        "resp_parcelas_fornecimento": [
-
-        ],
-        "resp_quantitativo_bens_servicos": [
-
-        ],
         "resp_motivacao_justificativa_escolha": [
-
+            "A Equipe de Planejamento da Contratação recomenda a 'Alternativa 1 - Aquisição de equipamento Oracle Exadata (Exacc)', por ser a solução que melhor atende aos requisitos de alta disponibilidade, performance e escalabilidade exigidos pelos sistemas críticos do TJGO, como o Projudi. A escolha fundamenta-se na necessidade de manter a padronização tecnológica do ambiente de banco de dados, garantindo a interoperabilidade nativa e a otimização de hardware e software que apenas sistemas de engenharia integrada oferecem, superando as limitações de performance das alternativas de infraestrutura genérica (HCI) ou a complexidade de migração para plataformas de software livre. Em observância aos princípios da eficácia, eficiência e economicidade previstos no art. 11 da Lei nº 14.133/2021, a solução escolhida mitiga riscos de indisponibilidade e reduz custos operacionais de tunning e manutenção, sendo a opção mais vantajosa para assegurar a continuidade da prestação jurisdicional, rejeitando-se as demais alternativas por não oferecerem o mesmo nível de robustez ou por imporem riscos operacionais e de conformidade com a LGPD (Lei nº 13.709/2018) superiores aos benefícios de custo."
         ]
     },
     "resp_relacao_demanda_prevista_e_quantidade": {
         "resp_relacao_necessidade_volumes": [
-
+            "A quantidade demandada foi dimensionada com base na análise técnica da carga de trabalho atual dos sistemas críticos do TJGO, que operam próximos ao limite de capacidade de hardware. O volume de processamento e armazenamento do novo equipamento Oracle Exacc foi projetado para suportar o crescimento vegetativo dos dados processuais e administrativos pelos próximos anos, considerando o histórico de consumo de recursos e a projeção de expansão dos serviços digitais, garantindo que a infraestrutura não se torne um gargalo para a celeridade processual."
         ],
-        "resp_forma_calculo_quantitativo": [
-
-        ],
+        "resp_forma_calculo_quantitativo": [],
         "resp_natureza_objeto": [
-
+            "O objeto caracteriza-se como despesa de capital (investimento em ativo imobilizado), tratando-se de aquisição de bem de TI. A contratação é classificada como não continuada, visto que o objeto é a entrega de equipamento (appliance) com garantia e suporte técnico associado, em conformidade com as normas de orçamento público e as diretrizes da Lei nº 14.133/2021."
         ],
         "resp_modalidade_tipo_licitacao": [
-
+            "A modalidade licitatória indicada é o Pregão Eletrônico, sob o critério de julgamento de menor preço, por tratar-se de aquisição de bem comum, cujos padrões de desempenho e qualidade podem ser objetivamente definidos por meio de especificações técnicas usuais no mercado, conforme art. 6º, XIII, da Lei nº 14.133/2021."
         ],
         "resp_parcelamento_objeto": [
-
+            "O parcelamento do objeto não é recomendado para esta contratação, visto que o Oracle Exacc constitui um sistema único e integrado de hardware e software. A divisão do objeto em itens distintos para aquisição de componentes isolados comprometeria a garantia do fabricante, a performance otimizada e a responsabilidade técnica pelo funcionamento do conjunto, enquadrando-se na exceção prevista no art. 40, § 3º, II, da Lei nº 14.133/2021."
         ],
         "resp_vigencia_contrato": [
-
+            "A vigência do contrato será de 12 meses, contados a partir da assinatura, com possibilidade de prorrogação conforme as regras estabelecidas na Lei nº 14.133/2021, visando a manutenção do suporte técnico e garantia do equipamento, garantindo a continuidade da solução tecnológica essencial ao Tribunal."
         ]
     },
     "resp_necessidades_adequacao_ambiente": {
         "resp_infraestrutura_tecnologica": [
-
+            "A instalação do equipamento Oracle Exacc demandará adequações pontuais na infraestrutura de rede do datacenter do TJGO, especificamente no que tange à conectividade de alta velocidade (fibra óptica) para integração com o core de rede existente, garantindo a latência mínima necessária para o processamento de bancos de dados de missão crítica."
         ],
         "resp_infraestrutura_eletrica": [
-
+            "Será necessária a verificação da capacidade de carga elétrica e climatização do rack onde o equipamento será instalado. O TJGO deverá assegurar que o sistema de energia ininterrupta (nobreaks) e o sistema de refrigeração do datacenter estejam dimensionados para suportar o consumo energético e a dissipação térmica do novo appliance, conforme especificações do fabricante."
         ],
         "resp_logistica_implantacao": [
-
+            "A logística de implantação será planejada para ocorrer em janela de manutenção programada, visando minimizar o impacto nos sistemas Projudi e PJe. A equipe técnica do TJGO, em conjunto com o suporte do fabricante, realizará a migração das cargas de trabalho de forma assistida, garantindo a integridade dos dados e a disponibilidade dos serviços durante a transição."
         ],
         "resp_espaco_fisico": [
-
+            "O equipamento será alocado no datacenter principal do TJGO, sendo necessário espaço físico em rack padrão 19 polegadas, com as devidas condições de segurança física e acesso restrito, em conformidade com a Política de Segurança da Informação do Tribunal."
         ],
         "resp_mobiliario": [
-
+            "Não há necessidade de aquisição de mobiliário adicional, visto que o equipamento será instalado em infraestrutura de rack já existente no datacenter do Tribunal, sendo dispensada qualquer adequação neste aspecto."
         ]
     },
     "resp_necessidade_recursos_materiais_humanos": [
         {
-            "resp_aspecto": "Infraestrutura de Armazenamento e Equipe de Gestão/Fiscalização",
+            "resp_aspecto": "Infraestrutura tecnológica, elétrica e equipe de fiscalização",
             "resp_necessidades": [
-                "A viabilização da execução contratual para a nova solução de armazenamento de dados (storage) demandará a disponibilização de infraestrutura de rede adequada, pontos de conectividade de alta velocidade (fibra óptica) para a interconexão com o novo datacenter, e a garantia de fornecimento ininterrupto de energia elétrica para os novos equipamentos. No que tange aos recursos humanos, será imprescindível a alocação de uma equipe técnica especializada, composta por analistas de sistemas e administradores de infraestrutura, para acompanhar a instalação, configuração, testes e homologação da solução. Adicionalmente, a gestão e fiscalização do contrato exigirão a designação de um Gestor do Contrato e um Fiscal Técnico, com formação superior na área de TI, que serão responsáveis por atestar as faturas, monitorar o cumprimento dos níveis de serviço (SLA), gerenciar as ordens de serviço e garantir a conformidade com as especificações técnicas e contratuais. A equipe de fiscalização deverá estar capacitada para avaliar o desempenho, a escalabilidade e a segurança da nova solução de storage, assegurando que os objetivos da contratação sejam plenamente alcançados."
+                "Para a viabilização da execução contratual, é indispensável a disponibilização de espaço físico adequado no Data Center do TJGO, com infraestrutura de climatização, energia ininterrupta e conectividade de rede de alta performance (SAN/LAN) para a instalação do appliance Oracle Exacc. Adicionalmente, a execução demanda a atuação de uma equipe técnica composta por analistas de infraestrutura da DTI para o acompanhamento da instalação, configuração e migração de dados, além da designação de um Gestor de Contrato e Fiscal Técnico, ambos com formação superior em TI, responsáveis pela fiscalização, ateste de faturas e monitoramento dos níveis de serviço."
             ],
             "resp_responsavel": [
-                "Diretoria de Tecnologia da Informação (DTI), Coordenadoria de Infraestrutura Tecnológica (CITEC), Diretoria de Obras e Diretoria Administrativa do TJGO."
+                "Diretoria de Tecnologia da Informação (DTI) e Divisão de Infraestrutura Tecnológica."
             ],
             "resp_prazo_atendimento": [
-                "Os recursos de infraestrutura tecnológica e elétrica deverão estar prontos e disponíveis até 5 (cinco) dias antes da data prevista para o início da vigência do contrato, conforme cronograma de implantação. A equipe de gestão e fiscalização deverá ser designada e capacitada previamente à assinatura do contrato, garantindo a prontidão para o acompanhamento desde a fase de instalação e homologação."
+                "Até 15 dias antes da data prevista para a entrega do equipamento, garantindo a prontidão do ambiente para a instalação."
             ]
         }
     ],
     "resp_estrategia_continuidade": [
         {
             "resp_evento": [
-                "Encerramento por abandono, inadimplemento ou incapacidade da empresa contratada."
+                "Inadimplemento contratual ou falência da empresa contratada durante a vigência da garantia ou suporte."
             ],
             "resp_efeito": [
-                "A paralisação ou indisponibilidade da nova solução de armazenamento de dados (storage) impactará diretamente a capacidade do TJGO de realizar backups e restaurar informações críticas, comprometendo a continuidade dos serviços jurisdicionais e administrativos, a segurança da informação e a integridade dos dados institucionais. Poderá haver perda de dados ou indisponibilidade de acesso a sistemas essenciais que dependem da infraestrutura de armazenamento."
+                "Comprometimento da disponibilidade dos sistemas críticos (Projudi, sistemas administrativos e BI), gerando indisponibilidade de serviços jurisdicionais."
             ],
             "resp_causas": [
-                "Descumprimento contratual por parte da empresa contratada, falência, incapacidade técnica ou operacional para a execução do objeto, ou ainda, a não observância dos níveis de serviço (SLA) estabelecidos."
+                "Instabilidade financeira da contratada, falha na prestação de suporte técnico especializado ou descontinuidade de peças de reposição."
             ],
             "resp_controles_atuais": [
-                "Cláusulas contratuais que preveem sanções e penalidades por descumprimento, monitoramento contínuo do desempenho e da qualidade dos serviços prestados, acompanhamento dos prazos de entrega e fiscalização ativa do contrato."
+                "Monitoramento constante dos níveis de serviço (SLA), exigência de garantias contratuais e manutenção de contratos de suporte de nível 2 e 3 com o fabricante."
             ],
             "resp_acoes_contorno": [
-                "Notificação formal à empresa contratada para saneamento das irregularidades, aplicação de multas e glosas contratuais, e, em último caso, a rescisão contratual e a convocação do segundo colocado no certame licitatório para assumir a execução do objeto, ou a instauração de novo processo licitatório para a contratação de nova solução."
+                "Acionamento imediato do suporte direto do fabricante (Oracle) e utilização de redundância de infraestrutura existente para manter a operação em modo de contingência."
             ],
             "resp_acao_corretiva_preventiva": [
-                "Aplicação de sanções contratuais previstas na Lei nº 14.133/2021 e no edital, como multas, advertências e rescisão contratual. Realização de auditorias periódicas para verificar a conformidade com os requisitos técnicos e de segurança. Exigência de atestados de capacidade técnica e de qualificação da empresa contratada."
+                "Aplicação de sanções administrativas, glosas por descumprimento de SLA e rescisão contratual, com convocação de eventual segundo colocado ou abertura de novo certame."
             ],
             "resp_responsavel": [
-                "Comitê de Gestão de Continuidade de Negócios do TJGO, com participação da Diretoria de Tecnologia da Informação (DTI) e da Coordenadoria de Contratos e Aquisições de TIC (CCAT)."
+                "Gestor do Contrato e Diretoria de Tecnologia da Informação."
             ]
         }
     ],
     "resp_estrategia_independencia_tjgo": [
         {
             "resp_evento": [
-                "Dependência tecnológica excessiva (vendor lock-in) ou descontinuidade da oferta da solução no mercado."
+                "Vendor lock-in tecnológico ou descontinuidade da linha de produtos pelo fabricante."
             ],
             "resp_efeito": [
-                "Dificuldade ou impossibilidade de migração para outras soluções de armazenamento de dados no futuro, aumento de custos de licenciamento e manutenção, e potencial comprometimento da segurança e da escalabilidade da infraestrutura de TIC do TJGO."
+                "Dependência excessiva de uma única solução, dificultando a migração para tecnologias alternativas e aumentando o custo de transição."
             ],
             "resp_causas": [
-                "Contratação de soluções proprietárias com formatos de dados fechados, ausência de cláusulas contratuais que garantam a portabilidade de dados e a extração de informações em formatos abertos, e a falta de planos de saída claros e economicamente viáveis."
+                "Utilização de tecnologias proprietárias sem mecanismos de portabilidade de dados ou falta de planejamento para a transição tecnológica."
             ],
             "resp_controles_atuais": [
-                "Priorização de soluções que utilizem padrões abertos e tecnologias amplamente difundidas no mercado, análise criteriosa das cláusulas contratuais para garantir a portabilidade de dados e a possibilidade de migração, e a exigência de documentação técnica completa e detalhada."
+                "Adoção de padrões abertos de integração, exigência de interoperabilidade e manutenção de documentação técnica detalhada do ambiente."
             ],
             "resp_acoes_contorno": [
-                "Negociação de cláusulas contratuais que assegurem o direito de exportação dos dados em formatos abertos e legíveis por outras plataformas, sem custos adicionais. Busca por soluções que ofereçam mecanismos de integração flexíveis e que permitam a coexistência com outras tecnologias. Avaliação da possibilidade de adoção de estratégias multicloud ou híbridas, quando aplicável."
+                "Realização de backups periódicos em formatos neutros e manutenção de planos de contingência para migração de dados entre plataformas."
             ],
             "resp_acao_corretiva_preventiva": [
-                "Inclusão de cláusulas contratuais específicas que garantam a portabilidade dos dados em formatos abertos (ex: CSV, JSON, XML) ao final do contrato, a possibilidade de acesso ao histórico de configurações e metadados, e a exigência de que a contratada forneça documentação completa para facilitar a transição. Realização de testes de migração de dados durante a vigência do contrato, se possível."
+                "Inclusão de cláusulas de transição contratual, direito de extração de dados sem custos adicionais e avaliação periódica de alternativas de mercado."
             ],
             "resp_responsavel": [
-                "Diretoria de Tecnologia da Informação (DTI) e Coordenadoria de Contratos e Aquisições de TIC (CCAT)."
+                "Diretoria de Tecnologia da Informação e Coordenadoria de Infraestrutura."
             ]
         }
     ],
@@ -224,7 +214,7 @@ const homologEtp = {
         }
     ],
     "resp_viabilidade_economica_contratacao": [
-        "A presente contratação demonstra viabilidade econômica, uma vez que os custos estimados estão em conformidade com os valores praticados pelo mercado e alinhados ao princípio da economicidade, conforme análise detalhada no Estudo Técnico Preliminar e no Plano de Contratações de TIC."
+        "A contratação é viável economicamente, com recursos previstos no orçamento de 2026 e alinhada ao Plano Anual de Contratações (PCA 245), garantindo a otimização de custos pela consolidação de cargas de trabalho."
     ],
     "resp_aprovacao_assinatura_estudo_tecnico": [
         ""

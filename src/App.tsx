@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import FormPage from './pages/FormPage';
@@ -6,12 +6,14 @@ import LoadingPage from './pages/LoadingPage';
 import ResultPage from './pages/ResultPage';
 import ETPResultPage from './pages/ETPResultPage';
 import TRResultPage from './pages/TRResultPage';
-import type { DemandaInput, DODResponse, DODApiResponse, ETPInput, ETPResponse, TRInput, TRResponse, LogEntry, FieldSelection } from './types';
+import type { DemandaInput, DODResponse, DODApiResponse, ETPInput, ETPResponse, TRInput, TRResponse, LogEntry, FieldSelection, ArcaSessionData } from './types';
 import { submitDemanda } from './api/dodService';
 import { submitETP } from './api/etpService';
 import { submitTR } from './api/trService';
 import { submitStandardExtraction } from './api/standardService';
 import { generateId, getSelectedValue } from './utils/helpers';
+import { fetchArcaSession } from './api/arcaService';
+import { setApiEnvironment } from './api/dodService';
 import DocumentNavBar from './components/layout/DocumentNavBar';
 import type { CurrentDocument } from './components/layout/DocumentNavBar';
 import './styles/global.css';
@@ -54,6 +56,8 @@ export default function App() {
   // Flag if the process went via fast-track Standard Extraction
   const [isStandardMode, setIsStandardMode] = useState<boolean>(false);
 
+  const arcaProcessedRef = useRef(false);
+
   /** Adiciona uma entrada ao console de logs de um documento específico */
   const addLog = useCallback(
     (message: string, doc: CurrentDocument, type: LogEntry['type'] = 'info') => {
@@ -73,19 +77,28 @@ export default function App() {
 
   /** Callback do formulário Nova Demanda → dispara a requisição DOD (Fluxo RAG) */
   const handleFormSubmit = useCallback(
-    async (data: DemandaInput) => {
+    async (data: DemandaInput, metadata?: { user_name: string; user_id: string }) => {
       setIsStandardMode(false);
       setFormData(data);
       setScreen('result');
       setActiveTab('DOD');
       setDodStatus('loading');
       setDodLogs([]);
-      addLog('Iniciando processo de geração de sugestões do DOD via modelo RAG...', 'DOD', 'info');
+
+      const sourceLabel = metadata ? 'integração ARCA' : 'modelo RAG';
+      addLog(`Iniciando processo de geração de sugestões do DOD via ${sourceLabel}...`, 'DOD', 'info');
 
       try {
         addLog(`Demanda: ${data.demanda_unidade} | PCA: ${data.pca}`, 'DOD', 'info');
+        if (metadata) {
+          addLog(`Usuário ARCA: ${metadata.user_name} (${metadata.user_id})`, 'DOD', 'info');
+        }
 
-        const result: DODApiResponse = await submitDemanda(data, (msg, type) => addLog(msg, 'DOD', type));
+        const result: DODApiResponse = await submitDemanda(
+          data,
+          (msg, type) => addLog(msg, 'DOD', type),
+          metadata,
+        );
 
         addLog('Todas as sugestões do DOD foram recebidas com sucesso!', 'DOD', 'success');
         setDodTraceId(result.trace_id);
@@ -100,6 +113,56 @@ export default function App() {
     },
     [addLog]
   );
+
+  /**
+   * Deep-Link ARCA: detecta ?token= na URL, busca sessão no backend,
+   * pula FormPage e dispara handleFormSubmit automaticamente.
+   */
+  useEffect(() => {
+    if (arcaProcessedRef.current) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    if (!token) return;
+
+    arcaProcessedRef.current = true;
+
+    // Limpar URL imediatamente
+    window.history.replaceState({}, '', window.location.pathname);
+
+    (async () => {
+      try {
+        const sessionData: ArcaSessionData = await fetchArcaSession(token);
+
+        // Definir ambiente antes de disparar o fluxo
+        setApiEnvironment(sessionData.ambiente);
+
+        // Armazenar metadados do usuário ARCA
+        const metadata = {
+          user_name: sessionData.user_name,
+          user_id: sessionData.user_id,
+        };
+
+        // Montar DemandaInput a partir dos dados da sessão
+        const data: DemandaInput = {
+          pca: sessionData.pca,
+          demanda_unidade: sessionData.demanda_unidade,
+          grau_prioridade: sessionData.grau_prioridade,
+          justificativa: sessionData.justificativa,
+          valor_estimado: sessionData.valor_estimado,
+          modelo: sessionData.modelo,
+          data_prevista: sessionData.data_prevista,
+          investimento_custeio: sessionData.investimento_custeio,
+        };
+
+        // Disparar fluxo direto (pula FormPage)
+        handleFormSubmit(data, metadata);
+      } catch (error) {
+        console.error('Falha ao carregar sessão ARCA:', error);
+        // Fallback: exibir FormPage normal
+      }
+    })();
+  }, [handleFormSubmit]);
 
   /** Callback do formulário Contratação Repetida → dispara a requisição Fast-Track */
   const handleStandardSubmit = useCallback(

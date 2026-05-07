@@ -28,7 +28,7 @@ export const GEMINI_MODEL_OPTIONS = [
 export const DEFAULT_API_ENVIRONMENT = 'producao';
 
 /** URL padrão da API */
-export const DEFAULT_API_URL = 'http://127.0.0.1:8400';
+export const DEFAULT_API_URL = 'http://127.0.0.1:8000';
 
 /** Timeout padrão da API em milissegundos */
 export const DEFAULT_API_TIMEOUT = 600000;

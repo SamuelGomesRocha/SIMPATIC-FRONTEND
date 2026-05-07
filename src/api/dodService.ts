@@ -1,6 +1,7 @@
 import type { ApiConfig, DemandaInput, DODApiResponse } from '../types';
 import { API_KEY_STORAGE_KEY, API_MODEL_STORAGE_KEY, API_ENVIRONMENT_STORAGE_KEY, DEFAULT_API_URL, DEFAULT_API_TIMEOUT, DEFAULT_API_MODEL, DEFAULT_API_ENVIRONMENT } from '../config/constants';
 import homologDod from '../homolog-documents/homolog-dod';
+import { encryptApiKey, clearPublicKeyCache } from './cryptoService';
 
 /**
  * Retorna a configuração atual da API
@@ -82,7 +83,8 @@ export function getApiModel(): string {
  */
 export async function submitDemanda(
     data: DemandaInput,
-    onLog?: (message: string, type: 'info' | 'success' | 'warning' | 'error') => void
+    onLog?: (message: string, type: 'info' | 'success' | 'warning' | 'error') => void,
+    arcaMetadata?: { user_name: string; user_id: string },
 ): Promise<DODApiResponse> {
     const config = getApiConfig();
 
@@ -99,57 +101,84 @@ export async function submitDemanda(
 
     onLog?.('Preparando dados da requisição...', 'info');
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), config.timeout);
-
-    try {
-        onLog?.(`Enviando requisição para ${config.baseUrl}...`, 'info');
-
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                ...(config.apiKey ? { 'X-API-Key': config.apiKey } : {}),
-                'X-Gemini-Model': config.model,
-            },
-            body: JSON.stringify(data),
-            signal: controller.signal,
-        });
-
-        clearTimeout(timeoutId);
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            onLog?.(`Erro na resposta: ${response.status} - ${response.statusText}`, 'error');
-            throw new Error(`Erro ${response.status}: ${errorText || response.statusText}`);
+    const executeRequest = async (isRetry = false): Promise<DODApiResponse> => {
+        let encryptedKey = '';
+        if (config.apiKey) {
+            try {
+                // If it's a retry, force refresh the public key
+                encryptedKey = await encryptApiKey(config.apiKey, isRetry);
+            } catch (e) {
+                onLog?.('Aviso: Falha ao criptografar a chave (Servidor de segurança indisponível).', 'warning');
+            }
         }
 
-        onLog?.('Resposta recebida com sucesso!', 'success');
-        onLog?.('Processando documento e trace...', 'info');
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), config.timeout);
 
-        const raw = await response.json();
+        try {
+            if (!isRetry) onLog?.(`Enviando requisição para ${config.baseUrl}...`, 'info');
 
-        // Normaliza a resposta: o backend pode retornar no formato envelope
-        // { trace_id, texto_gerado } ou diretamente os campos do DOD no nível raiz.
-        let result: DODApiResponse;
-        if (raw.texto_gerado && raw.trace_id) {
-            result = raw as DODApiResponse;
-        } else {
-            const traceId = raw.trace_id || `dod-${Date.now()}`;
-            const textoGerado = raw.texto_gerado || raw;
-            result = { trace_id: traceId, texto_gerado: textoGerado };
-            onLog?.('Resposta normalizada (formato direto detectado).', 'info');
+            const bodyPayload = {
+                ...data,
+                ...(arcaMetadata ? {
+                    user_name: arcaMetadata.user_name,
+                    user_id: arcaMetadata.user_id,
+                } : {}),
+            };
+
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(encryptedKey ? { 'X-API-Key': encryptedKey } : {}),
+                    'X-Gemini-Model': config.model,
+                },
+                body: JSON.stringify(bodyPayload),
+                signal: controller.signal,
+            });
+
+            clearTimeout(timeoutId);
+
+            if (!response.ok) {
+                // Retry logic for key rotation
+                if ((response.status === 401 || response.status === 400) && !isRetry && config.apiKey) {
+                    clearPublicKeyCache();
+                    onLog?.('Chaves de segurança do servidor atualizadas. Sincronizando e tentando novamente...', 'info');
+                    return executeRequest(true);
+                }
+
+                const errorText = await response.text();
+                onLog?.(`Erro na resposta: ${response.status} - ${response.statusText}`, 'error');
+                throw new Error(`Erro ${response.status}: ${errorText || response.statusText}`);
+            }
+
+            onLog?.('Resposta recebida com sucesso!', 'success');
+            onLog?.('Processando documento e trace...', 'info');
+
+            const raw = await response.json();
+
+            let result: DODApiResponse;
+            if (raw.texto_gerado && raw.trace_id) {
+                result = raw as DODApiResponse;
+            } else {
+                const traceId = raw.trace_id || `dod-${Date.now()}`;
+                const textoGerado = raw.texto_gerado || raw;
+                result = { trace_id: traceId, texto_gerado: textoGerado };
+                onLog?.('Resposta normalizada (formato direto detectado).', 'info');
+            }
+
+            onLog?.(`Documento gerado com trace_id: ${result.trace_id}`, 'success');
+
+            return result;
+        } catch (error) {
+            clearTimeout(timeoutId);
+            if (error instanceof Error && error.name === 'AbortError') {
+                onLog?.('Timeout: a requisição excedeu o tempo limite.', 'error');
+                throw new Error('A requisição excedeu o tempo limite. Verifique a conexão com o servidor.');
+            }
+            throw error;
         }
+    };
 
-        onLog?.(`Documento gerado com trace_id: ${result.trace_id}`, 'success');
-
-        return result;
-    } catch (error) {
-        clearTimeout(timeoutId);
-        if (error instanceof Error && error.name === 'AbortError') {
-            onLog?.('Timeout: a requisição excedeu o tempo limite.', 'error');
-            throw new Error('A requisição excedeu o tempo limite. Verifique a conexão com o servidor.');
-        }
-        throw error;
-    }
+    return executeRequest();
 }

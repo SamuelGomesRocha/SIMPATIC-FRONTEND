@@ -2,18 +2,40 @@
  * Dados de homologação para o DOD
  */
 const homologDod = {
-    "nome_projeto": ["Aquisição de solução de armazenamento de dados (storage) de alta performance para o Data Center do TJGO"],
-    "data_envio": ["15/01/2026"],
-    "identificacao_pca": ["PCA 251 – DIT – Aquisição de solução de armazenamento de dados (storage) para modernização do Data Center – Plano Anual de Contratações de TIC – 2026."],
-    "alinhamento_loa": ["Lei Orçamentária Anual nº 24.019, de 06 de janeiro de 2026."],
-    "fonte_recurso": ["TJGO – Tribunal de Justiça do Estado de Goiás."],
-    "motivacao_justificativa": ["A presente demanda fundamenta-se na necessidade imperativa de modernização da infraestrutura de armazenamento de dados do Tribunal de Justiça do Estado de Goiás. Atualmente, o parque tecnológico de storages enfrenta o esgotamento do ciclo de vida útil e o encerramento dos contratos de suporte e garantia, o que coloca em risco a disponibilidade e a integridade dos dados institucionais. A expansão das competências digitais do Tribunal, aliada à implementação de novos sistemas judiciários e administrativos, demanda uma infraestrutura de armazenamento robusta, escalável e de alta performance. A ausência de atualização compromete a celeridade processual e a eficiência dos serviços prestados às unidades judiciárias e ao público externo. Adicionalmente, esta contratação é estratégica para viabilizar a infraestrutura do novo datacenter do TJGO, garantindo a continuidade dos serviços críticos e a resiliência do ambiente de TI. Diante do exposto, a aquisição visa mitigar riscos operacionais, assegurar a conformidade com os padrões de segurança da informação e garantir a sustentabilidade tecnológica necessária para o cumprimento da missão institucional. Formaliza-se, portanto, a demanda para início dos estudos técnicos pela Equipe de Planejamento da Contratação, em estrita observância à Resolução 468/2022 do CNJ."],
-    "resultados_beneficios": ["a) Aumento da disponibilidade e confiabilidade dos sistemas de informação do Tribunal; b) Garantia de suporte técnico especializado e manutenção preventiva para os ativos de armazenamento; c) Ampliação da capacidade de processamento e armazenamento para suportar o crescimento exponencial de dados judiciais; d) Melhoria na performance de acesso aos sistemas, resultando em maior celeridade na prestação jurisdicional; e) Padronização tecnológica do ambiente de datacenter, facilitando a gestão e reduzindo custos operacionais de manutenção; f) Mitigação de riscos de indisponibilidade por falhas de hardware ou obsolescência tecnológica."],
+    "nome_projeto": [
+        "Aquisição de equipamento de processamento de banco de dados (appliance) Oracle Exacc para expansão da infraestrutura de TIC"
+    ],
+    "data_envio": [
+        "15/01/2026"
+    ],
+    "identificacao_pca": [
+        "PCA 245 – Aquisição de equipamento de processamento de banco de dados (appliance) Oracle Exacc – Plano Anual de Contratações de TIC – 2026."
+    ],
+    "fonte_recurso": [
+        "TJGO – Tribunal de Justiça do Estado de Goiás."
+    ],
+    "alinhamento_loa": [
+        "Lei Orçamentária Anual nº 24.019, de 06 de janeiro de 2026."
+    ],
+    "motivacao_justificativa": [
+        "O Tribunal de Justiça do Estado de Goiás (TJGO) tem envidado esforços contínuos na modernização de seu parque tecnológico, alinhando-se às diretrizes de transformação digital do Poder Judiciário brasileiro. A crescente demanda por serviços digitais, impulsionada pela necessidade de celeridade processual e pela expectativa da sociedade por uma justiça mais acessível, tem sobrecarregado a infraestrutura de processamento de dados atual. Atualmente, sistemas críticos como o Projudi, sistemas de gestão de recursos humanos e ferramentas de BI operam em níveis de utilização que atingem o limite de capacidade de hardware, gerando riscos de indisponibilidade intermitente e comprometimento da performance. A presente demanda visa à aquisição de um novo equipamento Oracle Exacc, por meio de Ata de Registro de Preços, para garantir a robustez, a escalabilidade e a alta disponibilidade necessárias para suportar o crescimento das cargas de trabalho institucionais. Esta solução é fundamental para assegurar a continuidade dos serviços prestados pelas diversas diretorias e unidades de negócio do Tribunal, mitigando riscos operacionais e garantindo a conformidade com as recomendações de infraestrutura e segurança da informação estabelecidas pelo Conselho Nacional de Justiça (CNJ). Com esta aquisição, o TJGO reafirma seu compromisso com a eficiência administrativa e a excelência na prestação jurisdicional, formalizando o início do planejamento da contratação pela equipe técnica competente."
+    ],
+    "resultados_beneficios": [
+        "a) Aumento da disponibilidade e resiliência dos sistemas judiciais críticos, reduzindo o risco de paradas não planejadas; b) Melhoria significativa na performance e no tempo de resposta das consultas aos bancos de dados, otimizando a experiência dos usuários internos e externos; c) Garantia de escalabilidade para suportar o crescimento contínuo do volume de dados e processos digitais; d) Padronização tecnológica do ambiente de processamento de dados, facilitando a gestão e o suporte técnico pela equipe de infraestrutura; e) Otimização dos custos operacionais através da consolidação de cargas de trabalho em uma plataforma de alto desempenho; f) Atendimento aos requisitos de segurança da informação e proteção de dados exigidos pelas normas do CNJ."
+    ],
     "planejamento_estrategico": {
-        "plano_gestao": ["Alinhado ao objetivo de promover a transformação digital e a eficiência administrativa, garantindo a infraestrutura necessária para a excelência na prestação jurisdicional."],
-        "plano_anual_contratacoes": ["A contratação está prevista no PCA 2026, atendendo ao planejamento orçamentário e às prioridades de investimento em infraestrutura de TIC do Tribunal."],
-        "pdtic": ["Em conformidade com as diretrizes de modernização da infraestrutura de TI, visando a sustentabilidade e a alta disponibilidade dos serviços de tecnologia da informação."],
-        "entic_jud": ["Alinhado ao eixo de infraestrutura tecnológica da ENTIC-JUD, que preconiza a atualização de ativos para assegurar a continuidade dos serviços e a segurança da informação no Poder Judiciário."]
+        "plano_gestao": [
+            "Alinhado ao objetivo de promover a transformação digital e a modernização da infraestrutura tecnológica para garantir a celeridade e a eficiência na prestação jurisdicional."
+        ],
+        "plano_anual_contratacoes": [
+            "A demanda está devidamente prevista no PCA 2026, sob o identificador PCA 245, atendendo ao planejamento orçamentário e de aquisições de TIC do Tribunal."
+        ],
+        "pdtic": [
+            "Em consonância com as diretrizes de sustentação e evolução da infraestrutura de TI, visando a modernização do parque de servidores e a garantia de alta disponibilidade dos serviços essenciais."
+        ],
+        "entic_jud": [
+            "Atende aos objetivos da Estratégia Nacional de TIC do Poder Judiciário, especialmente no que tange à infraestrutura tecnológica, segurança da informação e disponibilidade de serviços digitais conforme a Resolução CNJ nº 370/2021."
+        ]
     }
 };
 

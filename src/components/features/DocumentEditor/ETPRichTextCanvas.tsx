@@ -64,11 +64,57 @@ const DataFieldExtension = Extension.create({
 });
 
 /**
+ * Mapa de campos aninhados: mapeia a chave usada nas seções (flat) para o
+ * caminho real dentro do ETPResponse (parentKey → childKey).
+ *
+ * Isso cobre seções 1.3, 1.4, 1.5 e 1.6 cujos dados vivem dentro de
+ * sub-objetos no JSON de resposta do backend.
+ */
+const NESTED_FIELD_MAP: Record<string, { parent: keyof ETPResponse; child: string }> = {
+    // 1.3 — Avaliação das Diferentes Soluções Disponíveis
+    resp_periodo_analisado:        { parent: 'resp_avaliacao_diferentes_solucoes_disponiveis', child: 'resp_periodo_analisado' },
+    resp_termos_analisados:        { parent: 'resp_avaliacao_diferentes_solucoes_disponiveis', child: 'resp_termos_analisados' },
+    resp_metodologia_de_calculo:   { parent: 'resp_avaliacao_diferentes_solucoes_disponiveis', child: 'resp_metodologia_de_calculo' },
+    // 1.4 — Justificativa de Escolha da Solução
+    resp_motivacao_justificativa_escolha: { parent: 'resp_justificativa_escola_solucao_de_ti', child: 'resp_motivacao_justificativa_escolha' },
+    // 1.5 — Relação Demanda Prevista e Quantidade
+    resp_relacao_necessidade_volumes:  { parent: 'resp_relacao_demanda_prevista_e_quantidade', child: 'resp_relacao_necessidade_volumes' },
+    resp_forma_calculo_quantitativo:   { parent: 'resp_relacao_demanda_prevista_e_quantidade', child: 'resp_forma_calculo_quantitativo' },
+    resp_natureza_objeto:              { parent: 'resp_relacao_demanda_prevista_e_quantidade', child: 'resp_natureza_objeto' },
+    resp_modalidade_tipo_licitacao:    { parent: 'resp_relacao_demanda_prevista_e_quantidade', child: 'resp_modalidade_tipo_licitacao' },
+    resp_parcelamento_objeto:          { parent: 'resp_relacao_demanda_prevista_e_quantidade', child: 'resp_parcelamento_objeto' },
+    resp_vigencia_contrato:            { parent: 'resp_relacao_demanda_prevista_e_quantidade', child: 'resp_vigencia_contrato' },
+    // 1.6 — Necessidades de Adequação do Ambiente
+    resp_infraestrutura_tecnologica:   { parent: 'resp_necessidades_adequacao_ambiente', child: 'resp_infraestrutura_tecnologica' },
+    resp_infraestrutura_eletrica:      { parent: 'resp_necessidades_adequacao_ambiente', child: 'resp_infraestrutura_eletrica' },
+    resp_logistica_implantacao:        { parent: 'resp_necessidades_adequacao_ambiente', child: 'resp_logistica_implantacao' },
+    resp_espaco_fisico:                { parent: 'resp_necessidades_adequacao_ambiente', child: 'resp_espaco_fisico' },
+    resp_mobiliario:                   { parent: 'resp_necessidades_adequacao_ambiente', child: 'resp_mobiliario' },
+};
+
+/**
  * Resolve as sugestões de um campo do ETP, acessando sub-objetos quando necessário.
  * Restaurado para uso pelo ETPDocumentEditor (Sidebar).
  */
 export function getETPSuggestions(response: ETPResponse, fieldKey: string): string[] {
-    // Campos simples de nível raiz
+    // 1) Campos aninhados mapeados explicitamente (seções 1.3–1.6)
+    const nested = NESTED_FIELD_MAP[fieldKey];
+    if (nested) {
+        const parentObj = response[nested.parent];
+        if (parentObj && typeof parentObj === 'object') {
+            const value = (parentObj as unknown as Record<string, unknown>)[nested.child];
+            if (Array.isArray(value)) {
+                // Se for array de objetos (ex: resp_forma_calculo_quantitativo), formatar como texto
+                if (value.length > 0 && typeof value[0] === 'object') {
+                    return ['[Tabela / Dados Complexos]'];
+                }
+                return value as string[];
+            }
+        }
+        return [];
+    }
+
+    // 2) Campos simples de nível raiz
     const directValue = (response as unknown as Record<string, unknown>)[fieldKey];
     if (Array.isArray(directValue)) {
         if (directValue.length > 0 && typeof directValue[0] === 'object') {
@@ -99,13 +145,13 @@ export function getETPSuggestions(response: ETPResponse, fieldKey: string): stri
         return directValue as string[];
     }
 
-    // Campos aninhados em sub-objetos
+    // 3) Campos aninhados via notação com ponto (ex: "parent.child")
     if (fieldKey.includes('.')) {
         const [parent, child] = fieldKey.split('.');
         return (response[parent as keyof ETPResponse] as any)?.[child] || [];
     }
 
-    // Caso específico para chaves que mapeiam para o levantamento de alternativas
+    // 4) Caso específico para chaves de alternativas
     if (fieldKey.startsWith('resp_alternativa_')) {
         const avaliacao = response.resp_avaliacao_diferentes_solucoes_disponiveis;
         if (avaliacao) {

@@ -1,0 +1,657 @@
+[
+    {
+        "codigo": "01.xx",
+        "descricao": "Aposentadorias do RPPS, Reserva Remunerada e Reformas dos Militares",
+        "orientacao": "Ver orientação no Manual da STN (MCASP)."
+    },
+    {
+        "codigo": "01.01",
+        "descricao": "13° Salário Inativo Civil",
+        "orientacao": "Registra o valor das despesas com pagamento de 13º salário do inativo civil."
+    },
+    {
+        "codigo": "01.02",
+        "descricao": "13º Salário Inativo Militar",
+        "orientacao": "Registra o valor das despesas com pagamento de 13º salário do inativo militar."
+    },
+    {
+        "codigo": "01.03",
+        "descricao": "Gratificações - Inativo Civil",
+        "orientacao": "Registra o valor das despesas com pagamento de gratificações do inativo civil."
+    },
+    {
+        "codigo": "01.04",
+        "descricao": "Gratificações - Inativo Militar",
+        "orientacao": "Registra o valor das despesas com pagamento de gratificações do inativo militar."
+    },
+    {
+        "codigo": "01.05",
+        "descricao": "Inativo Civil (Inciso VI, § 1º Art. 19 LC. N. 101/2000)",
+        "orientacao": "Registra o valor das despesas com pagamento de inativos, ainda que por intermédio de fundo específico, custeadas por recursos provenientes: a) da arrecadação de contribuições dos segurados; b) da compensação financeira de que trata o § 9o do art. 201 da Constituição; c) das demais receitas diretamente arrecadadas por fundo vinculado a tal finalidade, inclusive o produto da alienação de bens, direitos e ativos, bem como seu superávit financeiro."
+    },
+    {
+        "codigo": "01.06",
+        "descricao": "Proventos - Inativo Civil",
+        "orientacao": "Registra o valor das despesas com pagamento de proventos do inativo civil."
+    },
+    {
+        "codigo": "01.07",
+        "descricao": "Proventos - Inativo Militar",
+        "orientacao": "Registra o valor das despesas com pagamento de proventos do inativo militar."
+    },
+    {
+        "codigo": "01.08",
+        "descricao": "Vantagens Inativo Civil",
+        "orientacao": "Registra o valor das despesas com pagamento de vantagens do inativo civil."
+    },
+    {
+        "codigo": "01.09",
+        "descricao": "Vantagens Inativo Militar",
+        "orientacao": "Registra o valor das despesas com pagamento de vantagens do inativo militar."
+    },
+    {
+        "codigo": "01.10",
+        "descricao": "Inativo do Magistério",
+        "orientacao": "Registra o valor das despesas com pagamento do inativo do magistério."
+    },
+    {
+        "codigo": "01.11",
+        "descricao": "13º Salário Inativo do Magistério",
+        "orientacao": "Registra o valor das despesas com pagamento do 13º salário do inativo do magistério."
+    },
+    {
+        "codigo": "01.12",
+        "descricao": "Demais Descontos - Inativo Civil",
+        "orientacao": "Registra o valor das despesas com demais descontos com inativo civil, tais como: consignações e empréstimos."
+    },
+    {
+        "codigo": "01.13",
+        "descricao": "Demais Descontos Inativo Militar",
+        "orientacao": "Registra o valor das despesas com demais descontos com inativo militar, tais como: consignações e empréstimos."
+    },
+    {
+        "codigo": "01.14",
+        "descricao": "IRRF-Aposentadorias - Inativo Civil",
+        "orientacao": "Registra o valor das despesas com retenção e recolhimento do Imposto de Renda na Fonte."
+    },
+    {
+        "codigo": "01.15",
+        "descricao": "Contribuições para o Fundo de Previdência Estadual - Inativo Civil",
+        "orientacao": "Registra o valor das despesas com contribuições para o Fundo de Previdência Estadual retida e recolhida do inativo civil."
+    },
+    {
+        "codigo": "01.16",
+        "descricao": "Contribuições para o Fundo de Previdência Estadual - Inativo Militar",
+        "orientacao": "Registra o valor das despesas com contribuições para o Fundo de Previdência Estadual retida e recolhida do inativo militar."
+    },
+    {
+        "codigo": "01.17",
+        "descricao": "Contribuições para IPASGOSAÚDE - Inativo Civil",
+        "orientacao": "Registra o valor das despesas com contribuições para o Ipasgo Saúde."
+    },
+    {
+        "codigo": "01.19",
+        "descricao": "Devolução de Outros Descontos - Inativo Civil",
+        "orientacao": "Registra o valor das despesas com devolução de outros descontos do pessoal inativo civil, tais como: devolução referente a indenização a Fazenda Publica, dev. Pensão alimenticia, dev. Redutor F.C. e afins."
+    },
+    {
+        "codigo": "01.20",
+        "descricao": "Devolução de Outros Descontos - Inativo Militar",
+        "orientacao": "Registra o valor das despesas com devolução de outros descontos do pessoal inativo militar, tais como: devolução referente a indenização a Fazenda Publica, dev. Pensão alimenticia, dev. Redutor F.C. e afins."
+    },
+    {
+        "codigo": "01.21",
+        "descricao": "Consignação Empréstimos Financeiros - Inativo Civil",
+        "orientacao": "Registra o valor das despesas com as consignações de empréstimos financeiros do inativo civil."
+    },
+    {
+        "codigo": "01.22",
+        "descricao": "Consignação Empréstimos Financeiros - Inativo Militar",
+        "orientacao": "Registra o valor das despesas com as consignações de empréstimos financeiros do inativo militar."
+    },
+    {
+        "codigo": "01.23",
+        "descricao": "Inativo Militar (Inc. VI, § 1º Art. 19, LC n° 101/2000)",
+        "orientacao": "Registra o valor das despesas com pagamento de inativos, ainda que por intermédio de fundo específico, custeadas por recursos provenientes: a) da arrecadação de contribuições dos segurados; b) da compensação financeira de que trata o § 90 do art. 201 da Constituição; c) das demais receitas diretamente arrecadadas por fundo vinculado a tal finalidade, inclusive o produto da alienação de bens, direitos e ativos, bem como seu superávit financeiro."
+    },
+    {
+        "codigo": "01.24",
+        "descricao": "IRRF - Reformas",
+        "orientacao": "Registra o valor das despesas com retenção e recolhimento do Imposto de Renda na Fonte."
+    },
+    {
+        "codigo": "01.25",
+        "descricao": "Contribuições para IPASGOSAUDE Inativo Militar",
+        "orientacao": "Registra o valor das despesas com contribuições para o Ipasgo Saúde."
+    },
+    {
+        "codigo": "01.26",
+        "descricao": "Contribuição Previdenciária Aposentados Cartorários e Dobristas",
+        "orientacao": "Registra o valor das despesas com contribuições previdenciárias retidas e recolhidas dos Aposentados Cartorários e Dobristas."
+    },
+    {
+        "codigo": "01.27",
+        "descricao": "Remuneração de Aposentadorias do Serviço Notarial - Cartorários e Afins",
+        "orientacao": "Registra o valor das despesas com Remunerações de Aposentadorias do Serviço Notarial - Cartorários e Afins."
+    },
+    {
+        "codigo": "01.28",
+        "descricao": "Contribuição para o Fundo Previdenciário - Inativo Civil",
+        "orientacao": "Registra o valor das despesas de inativos com contribuições para o Fundo Previdenciário."
+    },
+    {
+        "codigo": "03.xx",
+        "descricao": "Pensões do RPPS e do Militar",
+        "orientacao": "Ver orientação no Manual da STN (MCASP)."
+    },
+    {
+        "codigo": "03.01",
+        "descricao": "13° Salário Pensionista Civil",
+        "orientacao": "Registra o valor das despesas com pagamento de 13º salário do pensionista civil."
+    },
+    {
+        "codigo": "03.02",
+        "descricao": "13° Salário Pensionista Militar",
+        "orientacao": "Registra o valor das despesas com pagamento de 13º salário do pensionista militar."
+    },
+    {
+        "codigo": "03.03",
+        "descricao": "Pensões Pensionista Civil",
+        "orientacao": "Registra o valor das despesas com pagamento de pensões do pessoal civil."
+    },
+    {
+        "codigo": "03.04",
+        "descricao": "Pensões Pensionista Militar",
+        "orientacao": "Registra o valor das despesas com pagamento de pensões do pessoal militar."
+    },
+    {
+        "codigo": "03.05",
+        "descricao": "Vantagem Pessoal - Sentenças Judiciais - Pensionista Civil",
+        "orientacao": "Registra o valor das despesas com pagamento de vantagem pessoal decorrida de sentenças judiciais para pensionistas."
+    },
+    {
+        "codigo": "03.06",
+        "descricao": "Pensionistas do Magistério",
+        "orientacao": "Registra o valor das despesas com pagamento de pensões do magistério."
+    },
+    {
+        "codigo": "03.07",
+        "descricao": "13° Salário Pensionistas do Magistério",
+        "orientacao": "Registra o valor das despesas com pagamento de 13º salário dos pensionistas do magistério."
+    },
+    {
+        "codigo": "03.08",
+        "descricao": "Demais Descontos Pensionista Civil",
+        "orientacao": "Registra o valor das despesas com descontos dos pensionistas civil."
+    },
+    {
+        "codigo": "03.09",
+        "descricao": "Demais Descontos Pensionista Militar",
+        "orientacao": "Registra o valor das despesas com descontos dos pensionistas militar."
+    },
+    {
+        "codigo": "03.10",
+        "descricao": "IRRF Pensionista Civil",
+        "orientacao": "Registra o valor das despesas com retenção e recolhimento do Imposto de Renda na Fonte."
+    },
+    {
+        "codigo": "03.11",
+        "descricao": "Contribuições para Fundo de Previdência Estadual - Pensionista Civil",
+        "orientacao": "Registra o valor das despesas com contribuições para o Fundo de Previdência Estadual retida e recolhida do pensionista civil."
+    },
+    {
+        "codigo": "03.12",
+        "descricao": "Contribuições para Fundo de Previdência Estadual - Pensionista Militar",
+        "orientacao": "Registra o valor das despesas com contribuições para o Fundo de Previdência Estadual retida e recolhida do pensionista militar."
+    },
+    {
+        "codigo": "03.13",
+        "descricao": "Contribuições para IPASGOSAUDE - Pensionista Civil",
+        "orientacao": "Registra o valor das despesas com contribuições para o Ipasgo Saúde."
+    },
+    {
+        "codigo": "03.14",
+        "descricao": "Pensionista Civil (Inciso VI § 1º Artigo 19, LC n° 101/2000)",
+        "orientacao": "Registra o valor das despesas com pagamento de pensionistas, ainda que por intermédio de fundo específico, custeadas por recursos provenientes: a) da arrecadação de contribuições dos segurados; b) da compensação financeira de que trata o § 9º do art. 201 da Constituição; c) das demais receitas diretamente arrecadadas por fundo vinculado a tal finalidade, inclusive o produto da alienação de bens, direitos e ativos, bem como seu superávit financeiro."
+    },
+    {
+        "codigo": "03.16",
+        "descricao": "Devolução de Outros Descontos - Pensionista Civil",
+        "orientacao": "Registra o valor das despesas com devolução de outros descontos do pessoal inativo civil, tais como: devolução referente a indenização a Fazenda Publica, dev. Pensão alimenticia, dev. Redutor F.C. e afins."
+    },
+    {
+        "codigo": "03.17",
+        "descricao": "Devolução de Outros Descontos - Pensionista Militar",
+        "orientacao": "Registra o valor das despesas com devolução de outros descontos do pessoal inativo militar, tais como: devolução referente a indenização a Fazenda Publica, dev. Pensão alimenticia, dev. Redutor F.C. e afins."
+    },
+    {
+        "codigo": "03.18",
+        "descricao": "Consignação Empréstimos Financeiros - Pensionista Civil",
+        "orientacao": "Registra o valor das despesas com as consignações de empréstimos financeiros do Pensionista civil."
+    },
+    {
+        "codigo": "03.19",
+        "descricao": "Consignação Empréstimos Financeiros - Pensionista Militar",
+        "orientacao": "Registra o valor das despesas com as consignações de empréstimos financeiros do Pensionista militar."
+    },
+    {
+        "codigo": "03.20",
+        "descricao": "Vantagem Pessoal - Sentenças Judiciais - Pensionista Militar",
+        "orientacao": "Registra o valor das despesas com pagamento de vantagem pessoal decorrida de sentenças judiciais para pensionistas."
+    },
+    {
+        "codigo": "03.21",
+        "descricao": "IRRF-Pensionistas Militar",
+        "orientacao": "Registra o valor das despesas com retenção e recolhimento do Imposto de Renda na Fonte."
+    },
+    {
+        "codigo": "03.22",
+        "descricao": "Contribuições para IPASGOSAÚDE - Pensionista Militar",
+        "orientacao": "Registra o valor das despesas com contribuições para o Ipasgo Saúde."
+    },
+    {
+        "codigo": "03.23",
+        "descricao": "Pensionista Militar (Inciso VI § 1º Artigo 19, LC n° 101/2000)",
+        "orientacao": "Registra o valor das despesas com pagamento de pensionistas, ainda que por intermédio de fundo específico, custeadas por recursos provenientes: a) da arrecadação de contribuições dos segurados; b) da compensação financeira de que trata o § 9º do art. 201 da Constituição; c) das demais receitas diretamente arrecadadas por fundo vinculado a tal finalidade, inclusive o produto da alienação de bens, direitos e ativos, bem como seu superávit financeiro."
+    },
+    {
+        "codigo": "03.24",
+        "descricao": "Contribuição Previdenciária - Pensionistas Cartorários e Dobristas",
+        "orientacao": "Registra o valor das despesas com contribuições previdenciárias retidas e recolhidas dos Pensionistas Cartorários e Dobristas."
+    },
+    {
+        "codigo": "03.25",
+        "descricao": "Remuneração de Pensões do Serviço Notarial - Cartorários e Afins",
+        "orientacao": "Registra o valor das despesas com Remunerações de Pensões do Serviço Notarial - Cartorários e Afins."
+    },
+    {
+        "codigo": "03.26",
+        "descricao": "Contribuição para o Fundo Previdenciário - Pensionista Civil",
+        "orientacao": "Registra o valor das despesas de pensionistas com contribuições para o Fundo Previdenciário."
+    },
+    {
+        "codigo": "04.xx",
+        "descricao": "Contratação por Tempo Determinado",
+        "orientacao": "Ver orientação no Manual da STN (MCASP)."
+    },
+    {
+        "codigo": "04.01",
+        "descricao": "Pessoal Civil - Vantagens Fixas",
+        "orientacao": "Registra o valor das despesas com Contratação por Tempo Determinado de pessoal civil."
+    },
+    {
+        "codigo": "04.02",
+        "descricao": "Pessoal Militar - Vantagens Fixas",
+        "orientacao": "Registra o valor das despesas com Contratação por Tempo Determinado de pessoal militar."
+    },
+    {
+        "codigo": "04.03",
+        "descricao": "IRRF-Tempo Determinado - Pessoal Civil",
+        "orientacao": "Registra o valor das despesas com retenção e recolhimento do Imposto de Renda na Fonte do pessoal civil contratado por tempo determinado."
+    },
+    {
+        "codigo": "04.04",
+        "descricao": "IRRF-Tempo Determinado - Pessoal Militar",
+        "orientacao": "Registra o valor das despesas com retenção e recolhimento do Imposto de Renda na Fonte do pessoal militar contratado por tempo determinado."
+    },
+    {
+        "codigo": "04.05",
+        "descricao": "Horas Extras",
+        "orientacao": "Registra o valor das despesas com pagamentos de horas extras de pessoal contratado por tempo determinado."
+    },
+    {
+        "codigo": "04.06",
+        "descricao": "Pessoal Civil 13. Salário",
+        "orientacao": "Registra o valor das despesas com pagamento de 13. salário de pessoal contratado por tempo determinado."
+    },
+    {
+        "codigo": "04.07",
+        "descricao": "Pessoal Civil Adicional de Férias",
+        "orientacao": "Registra o valor das despesas com férias de pessoal contratado por tempo determinado."
+    },
+    {
+        "codigo": "04.08",
+        "descricao": "Pessoal Civil - Demais Obrigações Patronais",
+        "orientacao": "Registra o valor das despesas com obrigações patronais em razão de pessoal contratado por tempo determinado."
+    },
+    {
+        "codigo": "04.09",
+        "descricao": "Pessoal Civil - Vantagens Variáveis",
+        "orientacao": "Registra o valor das despesas com Vantagens Variáveis do Pessoal Civil contratado por tempo determinado."
+    },
+    {
+        "codigo": "04.10",
+        "descricao": "Pessoal Militar - Vantagens Variáveis",
+        "orientacao": "Registra o valor das despesas com Vantagens Variáveis do Pessoal Militar contratado por tempo determinado."
+    },
+    {
+        "codigo": "04.11",
+        "descricao": "Pessoal Civil - Adicionais de Insalubridade / Risco a Vida / Saúde",
+        "orientacao": "Registra o valor das despesas com Adicionais de Insalubridade, de Risco à Vida e à Saúde de Pessoal Civil contratado por tempo determinado."
+    },
+    {
+        "codigo": "04.12",
+        "descricao": "Pessoal Militar - Adicionais de Insalubridade / Risco à Vida / Saúde",
+        "orientacao": "Registra o valor das despesas com Adicionais de Insalubridade, de Risco à Vida e à Saúde de Pessoal Militar contratado por tempo determinado."
+    },
+    {
+        "codigo": "04.13",
+        "descricao": "Pessoal Militar - 13º Salário",
+        "orientacao": "Registra o valor das despesas com pagamento de 13º Salário do Pessoal Militar contratado por tempo determinado."
+    },
+    {
+        "codigo": "04.14",
+        "descricao": "Pessoal Militar - Adicional de Férias",
+        "orientacao": "Registra o valor das despesas com Adicional de Férias do Pessoal Militar contratado por tempo determinado."
+    },
+    {
+        "codigo": "04.15",
+        "descricao": "Pessoal Militar - Demais Obrigações Patronais",
+        "orientacao": "Registra o valor das despesas com Demais Obrigações Patronais do Pessoal Militar contratado por tempo determinado."
+    },
+    {
+        "codigo": "04.16",
+        "descricao": "Pessoal Civil - Obrigação Patronal - Previdência",
+        "orientacao": "Registra o valor das despesas com Contribuição Patronal à Previdência do Pessoal Civil contratado por tempo"
+    },
+    {
+        "codigo": "04.17",
+        "descricao": "Pessoal Militar - Obrigação Patronal - Previdência",
+        "orientacao": "Registra o valor das despesas com Contribuição Patronal à Previdência do Pessoal Militar contratado por tempo"
+    },
+    {
+        "codigo": "04.18",
+        "descricao": "Pessoal civil - INSS - Empregado",
+        "orientacao": "Registra o valor das despesas com retenção e recolhimento do INSS retido de pessoal contratado por tempo determinado"
+    },
+    {
+        "codigo": "08.xx",
+        "descricao": "Outros Beneficios Assistenciais do Servidor ou do Militar",
+        "orientacao": "Ver orientação no Manual da STN (MCASP)."
+    },
+    {
+        "codigo": "08.07",
+        "descricao": "Auxilio-Funeral - Ativo Civil",
+        "orientacao": "Registra o valor das despesas com o pagamento à familia para suporte às despesas com funeral do servidor ativo - civil."
+    },
+    {
+        "codigo": "08.08",
+        "descricao": "Auxilio-Funeral - Ativo Militar",
+        "orientacao": "Registra o valor das despesas com o pagamento à familia para suporte às despesas com funeral do servidor ativo - militar."
+    },
+    {
+        "codigo": "08.09",
+        "descricao": "Auxilio-Funeral - Inativo Civil",
+        "orientacao": "Registra o valor das despesas com o pagamento à familia para suporte às despesas com funeral do servidor inativo - civil."
+    },
+    {
+        "codigo": "08.10",
+        "descricao": "Auxilio-Funeral Inativo Militar",
+        "orientacao": "Registra o valor das despesas com o pagamento à familia para suporte às despesas com funeral do servidor inativo - militar."
+    },
+    {
+        "codigo": "08.11",
+        "descricao": "Auxilio-Creche - Civil",
+        "orientacao": "Registra o valor das despesas com o auxílio ao servidor civil para suporte às despesas com creche seu filho."
+    },
+    {
+        "codigo": "08.12",
+        "descricao": "Auxilio-Creche - Militar",
+        "orientacao": "Registra o valor das despesas com o auxilio ao servidor militar para suporte ås despesas com creche seu filho."
+    },
+    {
+        "codigo": "08.13",
+        "descricao": "Auxilio Saúde - Civil",
+        "orientacao": "Registra o valor das despesas com o auxílio ao servidor civil para suportar suas despesas com plano de saúde."
+    },
+    {
+        "codigo": "08.14",
+        "descricao": "Auxilio Saúde - Militar",
+        "orientacao": "Registra o valor das despesas com o auxilio ao servidor militar para suportar suas despesas com plano de saúde."
+    },
+    {
+        "codigo": "08.15",
+        "descricao": "Demais Beneficios Assistenciais - Civil",
+        "orientacao": "Demais beneficios não classificáveis nas outras categorias"
+    },
+    {
+        "codigo": "08.16",
+        "descricao": "Demais Beneficios Assistenciais - Militar",
+        "orientacao": "Demais beneficios não classificáveis nas outras categorias"
+    },
+    {
+        "codigo": "08.18",
+        "descricao": "Auxílio Saúde - Civil Ativo",
+        "orientacao": "Registra o valor das despesas com o auxílio ao servidor civil Ativo para suportar suas despesas com plano de saúde."
+    },
+    {
+        "codigo": "08.19",
+        "descricao": "Auxílio Saúde - Civil Inativo",
+        "orientacao": "Registra o valor das despesas com o auxílio ao servidor civil Inativo para suportar suas despesas com plano de saúde."
+    },
+    {
+        "codigo": "08.20",
+        "descricao": "Auxílio Saúde - Civil Pensionista",
+        "orientacao": "Registra o valor das despesas com o auxílio ao servidor civil Pensionista para suportar suas despesas com plano de saúde."
+    },
+    {
+        "codigo": "10.xx",
+        "descricao": "Outros Beneficios de Natureza Social",
+        "orientacao": "Ver orientação no Manual da STN (MCASP)."
+    },
+    {
+        "codigo": "10.01",
+        "descricao": "Abono-PASEP",
+        "orientacao": "Registra o valor das despesas com pagamento do abono Pasep devido aos servidores públicos, em cumprimento aos §§3º e 4º do art. 239 da Constituição Federal."
+    },
+    {
+        "codigo": "10.02",
+        "descricao": "Abono - PIS",
+        "orientacao": "Registra o valor das despesas com pagamento do abono PIS devido aos empregados públicos, em cumprimento aos §§3º e 4º do art. 239 da Constituição Federal."
+    },
+    {
+        "codigo": "11.xx",
+        "descricao": "Vencimentos e Vantagens Fixas - Pessoal Civil",
+        "orientacao": "Ver orientação no Manual da STN (MCASP)."
+    },
+    {
+        "codigo": "11.01",
+        "descricao": "13º Salário.",
+        "orientacao": "Registra o valor das despesas com pagamento do 13º salário do pessoal ativo civil."
+    },
+    {
+        "codigo": "11.02",
+        "descricao": "Adicionais Diversos",
+        "orientacao": "Registra o valor das despesas com pagamento de adicionais diversos do pessoal ativo civil."
+    },
+    {
+        "codigo": "11.03",
+        "descricao": "Férias-Abono",
+        "orientacao": "Registra o valor das despesas com pagamento do abono de férias do pessoal ativo civil."
+    },
+    {
+        "codigo": "11.04",
+        "descricao": "Grat. Estimulo à Fisc. e Arrecadação de Contrib. e Tributos",
+        "orientacao": "Registra o valor das despesas com pagamento de gratificações variáveis do pessoal ativo civil."
+    },
+    {
+        "codigo": "11.05",
+        "descricao": "Gratificação de Produtividade do Ensino",
+        "orientacao": "Registra o valor das despesas com pagamento de gratificação de Produtividade do Ensino."
+    },
+    {
+        "codigo": "11.06",
+        "descricao": "Adicionais de Insalubridade / Risco à Vida/Saúde",
+        "orientacao": "Registra o valor das despesas com pagamento de gratificações variáveis do pessoal ativo civil."
+    },
+    {
+        "codigo": "11.07",
+        "descricao": "Gratificação por Exercicio de Cargo",
+        "orientacao": "Registra o valor das despesas com pagamento de gratificação por Exercicio de Cargo."
+    },
+    {
+        "codigo": "11.08",
+        "descricao": "Pessoal à disposição de outros Poderes e Esferas de Governo",
+        "orientacao": "Registra o valor das despesas com pagamento de remuneração de Pessoal à disposição de outros órgãos e entidades de outros Poderes ou esferas de governo, mas com ônus para o Estado de Goiás."
+    },
+    {
+        "codigo": "11.09",
+        "descricao": "Vantagens Decorrentes de Sentenças Judiciais",
+        "orientacao": "Registra o valor das despesas com pagamento de vantagens decorrentes de sentenças judiciais."
+    },
+    {
+        "codigo": "11.10",
+        "descricao": "Vencimentos e Salários",
+        "orientacao": "Registra o valor das despesas com pagamento de remuneração de Pessoal Ativo."
+    },
+    {
+        "codigo": "11.12",
+        "descricao": "Demais Descontos Pessoal Civil",
+        "orientacao": "Registra o valor dos demais descontos incidentes sobre a remuneração de Pessoal ativo, tais como: faltas, dias não trabalhados, aula não ministrada, suspensões, odonto system, corte de teto e afins"
+    },
+    {
+        "codigo": "11.13",
+        "descricao": "IRRF-Pessoal Civil",
+        "orientacao": "Registra o valor das despesas com retenção e recolhimento do Imposto de Renda na Fonte."
+    },
+    {
+        "codigo": "11.14",
+        "descricao": "Contribuições para o Fundo de Previdência Estadual - Ativo Civil",
+        "orientacao": "Registra o valor das despesas com contribuições para o Fundo de Previdência Estadual retidas e recolhidas do ativo civil."
+    },
+    {
+        "codigo": "11.15",
+        "descricao": "Contribuições para IPASGO SAUDE",
+        "orientacao": "Registra o valor das despesas com contribuições para o Ipasgo Saúde."
+    },
+    {
+        "codigo": "11.16",
+        "descricao": "Gratificação Adicional - Anuênio, Qüinqüenio e Gratificação Trienal",
+        "orientacao": "Registra o valor das despesas com pagamento de gratificações adicionais, tais como: anuênio, quinquênio e gratificação trienal."
+    },
+    {
+        "codigo": "11.17",
+        "descricao": "Férias - Abono CLT",
+        "orientacao": "Registra o valor das despesas com pagamento do abono de férias do pessoal celetista."
+    },
+    {
+        "codigo": "11.18",
+        "descricao": "INSS - Empregado",
+        "orientacao": "Registra o valor das despesas com retenção e recolhimento do INSS retido dos empregados públicos e comissionados."
+    },
+    {
+        "codigo": "11.19",
+        "descricao": "Consignação Pensão Alimenticia",
+        "orientacao": "Registra o valor das despesas com retenção e recolhimento da pensão alimenticia consignada na folha do empregado."
+    },
+    {
+        "codigo": "11.20",
+        "descricao": "Consignação Empréstimos Financeiros",
+        "orientacao": "Registra o valor das despesas com retenção e recolhimento dos empréstimos consignados na folha do empregado."
+    },
+    {
+        "codigo": "11.21",
+        "descricao": "Consignação - Associação Classe",
+        "orientacao": "Registra o valor das despesas com retenção e recolhimento das contribuições consignadas na folha do empregado para associação de classe. Possui caráter contínuo."
+    },
+    {
+        "codigo": "11.38",
+        "descricao": "Remuneração de pessoal requisitado e à disposição do Estado",
+        "orientacao": "Registra o valor das despesas com pagamento de remuneração de Pessoal requisitado e à disposição do Estado."
+    },
+    {
+        "codigo": "11.39",
+        "descricao": "Contribuições para os Fundos de Previdência de Municipios - Ativo Civil",
+        "orientacao": "Registra o valor das despesas com contribuições para os Fundos de Previdência de Municípios retidas e recolhidas do Ativo Civil"
+    },
+    {
+        "codigo": "11.40",
+        "descricao": "Contribuições para os Fundos de Previdência de Outros Estados - Ativo Civil",
+        "orientacao": "Registra o valor das despesas com contribuições para os Fundos de Previdência de Outros Estados retidas e recolhidas do Ativo Civil."
+    },
+    {
+        "codigo": "11.41",
+        "descricao": "Contribuições para o Fundo de Previdência da União - Ativo Civil",
+        "orientacao": "Registra o valor das despesas com contribuições para o Fundo de Previdência da União retidas e recolhidas do Ativo Civil"
+    },
+    {
+        "codigo": "11.42",
+        "descricao": "Contribuições para o Plano de Previdência Complementar - PREVCOM-GO- Ativo Civil",
+        "orientacao": "Registra o valor das despesas com contribuições para o Plano de Previdência Complementar - PREVCOM-GO-Ativo Civil"
+    },
+    {
+        "codigo": "11.43",
+        "descricao": "Contribuições para o Fundo de Prev. Est. de serv. do P.Executivo à disposição de Outros Poderes - Ativo Civil",
+        "orientacao": "Registra o valor das despesas com Contribuições para o Fundo de Previdência de servidor civil ativo do Poder Executivo à disposição de outros poderes"
+    },
+    {
+        "codigo": "11.44",
+        "descricao": "Contribuições para o Fundo de Prev. Est. de serv.do P.Executivo à disposição de Outros Poderes - Ativo Militar",
+        "orientacao": "Registra o valor das despesas com Contribuições para o Fundo de Previdência de servidor militar ativo do Poder Executivo à disposição de outros poderes"
+    },
+    {
+        "codigo": "11.45",
+        "descricao": "Contribuição para o Fundo Previdenciário - Ativo Civil",
+        "orientacao": "Registra o valor das despesas de ativos com contribuições para o Fundo Previdenciário."
+    },
+    {
+        "codigo": "11.46",
+        "descricao": "Auxílio Doença (Licença para Tratamento de Saúde).",
+        "orientacao": "Registra o valor das despesas com pagamento de auxilio doença."
+    },
+    {
+        "codigo": "11.47",
+        "descricao": "Remuneração (abono) por Permanência em Atividade - Civil",
+        "orientacao": "Registra o valor das despesas com pagamento de abono permanência. Pessoal Civil."
+    },
+    {
+        "codigo": "11.50",
+        "descricao": "Venc. e Sal. Pro. Salário Maternidade",
+        "orientacao": "Registra o valor das despesas com pagamento de vencimentos, proventos e salário maternidade."
+    },
+    {
+        "codigo": "30.xx",
+        "descricao": "Material de Consumo",
+        "orientacao": "Ver orientação no Manual da STN (MCASP)."
+    },
+    {
+        "codigo": "30.02",
+        "descricao": "Combustíveis e Lubrificantes de Avião",
+        "orientacao": "Registra o valor das despesas com combustíveis e lubrificantes destinados a qualquer tipo de aeronave, tais como: aditivos, gasolina, graxas, óleos e fluidos em geral, querosene e afins."
+    },
+    {
+        "codigo": "30.09",
+        "descricao": "Gêneros Alimentícios",
+        "orientacao": "Registra o valor das despesas com a aquisição de alimentos, seja ao natural, beneficiados ou conservados, preparados e entregues prontos (tipo marmita), preparados e fornecidos no local (tipo buffet), adquiridos e consumidos em restaurante, padarias, entre outros, com o objetivo de alimentar servidores e usuários dos serviços públicos relacionados à unidade/instituição pública, dentro ou fora dela."
+    },
+    {
+        "codigo": "33.xx",
+        "descricao": "Passagens e Despesas com Locomoção",
+        "orientacao": "Ver orientação no Manual da STN (MCASP)."
+    },
+    {
+        "codigo": "36.xx",
+        "descricao": "Outros Serviços de Terceiros – Pessoa Física",
+        "orientacao": "Ver orientação no Manual da STN (MCASP)."
+    },
+    {
+        "codigo": "39.xx",
+        "descricao": "Outros Serviços de Terceiros – Pessoa Jurídica",
+        "orientacao": "Ver orientação no Manual da STN (MCASP)."
+    },
+    {
+        "codigo": "51.xx",
+        "descricao": "Obras e Instalações",
+        "orientacao": "Ver orientação no Manual da STN (MCASP)."
+    },
+    {
+        "codigo": "52.xx",
+        "descricao": "Equipamentos e Material Permanente",
+        "orientacao": ""
+    },
+    {
+        "codigo": "92.xx",
+        "descricao": "Despesas de Exercícios Anteriores",
+        "orientacao": "Registra o valor das despesas com pagamento de aposentadorias e reformas do pessoal civil e militar, relativos a exercícios anteriores."
+    }
+]

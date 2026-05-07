@@ -6,12 +6,12 @@
  */
 
 // @ts-ignore – Vite raw import
-import dodHtmlRaw from '../../doc_models/1. Documento de Oficializacao da Demanda (html).html?raw';
+import dodHtmlRaw from '../../doc_models/new_html/dod/1.DocumentodeOficializacaodaDemanda.html?raw';
 // @ts-ignore
-import etpHtmlRaw from '../../doc_models/2. Estudo Tecnico Preliminar.html?raw';
+import etpHtmlRaw from '../../doc_models/new_html/etp/2.EstudoTecnicoPreliminar.html?raw';
 // @ts-ignore
 import trHtmlRaw from '../../doc_models/4. Termo de Referencia.html?raw';
-import type { DODResponse, ETPResponse, TRResponse, FieldSelection } from '../types';
+import type { FieldSelection } from '../types';
 import { getSelectedValue } from './helpers';
 
 /** Tipos de documento suportados */
@@ -310,11 +310,36 @@ export function generatePopulatedHtml(
     const parser = new DOMParser();
     const doc = parser.parseFromString(rawTemplate, 'text/html');
 
+    /**
+     * Mapa de campos ETP aninhados — mesma lógica de ETPRichTextCanvas.
+     * Mapeia chaves "flat" usadas nos seletores CSS para o caminho real no JSON.
+     */
+    const ETP_NESTED: Record<string, { parent: string; child: string }> = {
+        resp_periodo_analisado:        { parent: 'resp_avaliacao_diferentes_solucoes_disponiveis', child: 'resp_periodo_analisado' },
+        resp_termos_analisados:        { parent: 'resp_avaliacao_diferentes_solucoes_disponiveis', child: 'resp_termos_analisados' },
+        resp_metodologia_de_calculo:   { parent: 'resp_avaliacao_diferentes_solucoes_disponiveis', child: 'resp_metodologia_de_calculo' },
+        resp_motivacao_justificativa_escolha: { parent: 'resp_justificativa_escola_solucao_de_ti', child: 'resp_motivacao_justificativa_escolha' },
+        resp_relacao_necessidade_volumes:  { parent: 'resp_relacao_demanda_prevista_e_quantidade', child: 'resp_relacao_necessidade_volumes' },
+        resp_forma_calculo_quantitativo:   { parent: 'resp_relacao_demanda_prevista_e_quantidade', child: 'resp_forma_calculo_quantitativo' },
+        resp_natureza_objeto:              { parent: 'resp_relacao_demanda_prevista_e_quantidade', child: 'resp_natureza_objeto' },
+        resp_modalidade_tipo_licitacao:    { parent: 'resp_relacao_demanda_prevista_e_quantidade', child: 'resp_modalidade_tipo_licitacao' },
+        resp_parcelamento_objeto:          { parent: 'resp_relacao_demanda_prevista_e_quantidade', child: 'resp_parcelamento_objeto' },
+        resp_vigencia_contrato:            { parent: 'resp_relacao_demanda_prevista_e_quantidade', child: 'resp_vigencia_contrato' },
+        resp_infraestrutura_tecnologica:   { parent: 'resp_necessidades_adequacao_ambiente', child: 'resp_infraestrutura_tecnologica' },
+        resp_infraestrutura_eletrica:      { parent: 'resp_necessidades_adequacao_ambiente', child: 'resp_infraestrutura_eletrica' },
+        resp_logistica_implantacao:        { parent: 'resp_necessidades_adequacao_ambiente', child: 'resp_logistica_implantacao' },
+        resp_espaco_fisico:                { parent: 'resp_necessidades_adequacao_ambiente', child: 'resp_espaco_fisico' },
+        resp_mobiliario:                   { parent: 'resp_necessidades_adequacao_ambiente', child: 'resp_mobiliario' },
+    };
+
     const getVal = (key: string) => {
         let suggestions: string[] = [];
         if (key.includes('.')) {
             const [parent, child] = key.split('.');
             suggestions = (response[parent] as any)?.[child] || [];
+        } else if (documentType === 'ETP' && ETP_NESTED[key]) {
+            const nested = ETP_NESTED[key];
+            suggestions = (response[nested.parent] as any)?.[nested.child] || [];
         } else {
             suggestions = (response as any)?.[key] || [];
         }
@@ -340,12 +365,9 @@ export function generatePopulatedHtml(
             if (el) el.innerHTML = getVal(rep.field);
         });
 
-        // Entic Jud é tratado via texto
-        doc.querySelectorAll('p, span, font').forEach(el => {
-            if (el.textContent?.includes('apresentar') && el.textContent?.includes('descrição') && el.closest('li')?.textContent?.includes('ENTIC-JUD')) {
-                el.innerHTML = getVal('planejamento_estrategico.entic_jud');
-            }
-        });
+        // Entic Jud – usa seletor direto no novo template
+        const enticEl = doc.querySelector('.resp_entic_jud');
+        if (enticEl) enticEl.innerHTML = getVal('planejamento_estrategico.entic_jud');
     } 
     else if (documentType === 'ETP') {
         // Mapeamento extraído de ETPRichTextCanvas

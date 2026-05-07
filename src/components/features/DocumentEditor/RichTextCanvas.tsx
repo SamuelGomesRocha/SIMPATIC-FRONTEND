@@ -17,8 +17,8 @@ import EditorToolbar from './EditorToolbar';
 import { useMemo, useEffect, useRef } from 'react';
 import type { DODResponse, FieldSelection } from '../../../types';
 // @ts-ignore
-import dodHtmlRaw from '../../../../doc_models/1. Documento de Oficializacao da Demanda (html).html?raw';
-import { exportDocument, generatePopulatedHtml } from '../../../utils/exportService';
+import dodHtmlRaw from '../../../../doc_models/new_html/dod/1.DocumentodeOficializacaodaDemanda.html?raw';
+import { generatePopulatedHtml } from '../../../utils/exportService';
 
 interface RichTextCanvasProps {
     response: DODResponse;
@@ -91,21 +91,12 @@ export default function RichTextCanvas({
             '.resp_plano_gestao': 'planejamento_estrategico.plano_gestao',
             '.resp_plano_anual': 'planejamento_estrategico.plano_anual_contratacoes',
             '.resp_pdtic': 'planejamento_estrategico.pdtic',
+            '.resp_entic_jud': 'planejamento_estrategico.entic_jud',
         };
 
         Object.entries(fieldMapping).forEach(([selector, fieldKey]) => {
             const el = doc.querySelector(selector);
             if (el) el.setAttribute('data-field', fieldKey);
-        });
-
-        // Entic Jud tagging
-        doc.querySelectorAll('p, span, font').forEach(el => {
-            if (el.textContent?.includes('Transformação Digital') || el.closest('li')?.textContent?.includes('ENTIC-JUD')) {
-                // Se o texto parece vir do ENTIC-JUD ou está no local dele
-                if (el.innerHTML.length > 20) { // heurística simples
-                    el.setAttribute('data-field', 'planejamento_estrategico.entic_jud');
-                }
-            }
         });
 
         return `

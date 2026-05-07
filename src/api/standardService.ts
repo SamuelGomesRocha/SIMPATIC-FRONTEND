@@ -1,5 +1,6 @@
 import type { StandardExtractResponse } from '../types';
 import { getApiConfig } from './dodService';
+import { encryptApiKey, clearPublicKeyCache } from './cryptoService';
 
 /**
  * Função recursiva para transformar listas de strings em uma única string,
@@ -49,47 +50,65 @@ export async function submitStandardExtraction(
     onLog?.(`ETP: ${files.etp.name} (${(files.etp.size / 1024).toFixed(0)} KB)`, 'info');
     onLog?.(`TR: ${files.tr.name} (${(files.tr.size / 1024).toFixed(0)} KB)`, 'info');
 
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), config.timeout);
-
-    try {
-        onLog?.(`Enviando documentos para ${config.baseUrl}...`, 'info');
-        onLog?.('Extraindo conteúdo do DOD...', 'info');
-
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                // Não definir Content-Type — o browser define automaticamente com boundary do FormData
-                ...(config.apiKey ? { 'X-API-Key': config.apiKey } : {}),
-                'X-Gemini-Model': config.model,
-            },
-            body: formData,
-            signal: controller.signal,
-        });
-
-        clearTimeout(timeoutId);
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            onLog?.(`Erro na resposta: ${response.status} - ${response.statusText}`, 'error');
-            throw new Error(`Erro ${response.status}: ${errorText || response.statusText}`);
+    const executeRequest = async (isRetry = false): Promise<StandardExtractResponse> => {
+        let encryptedKey = '';
+        if (config.apiKey) {
+            try {
+                encryptedKey = await encryptApiKey(config.apiKey, isRetry);
+            } catch (e) {
+                onLog?.('Aviso: Falha ao criptografar a chave (Servidor de segurança indisponível).', 'warning');
+            }
         }
 
-        onLog?.('Extraindo conteúdo do ETP...', 'info');
-        onLog?.('Extraindo conteúdo do TR...', 'info');
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), config.timeout);
 
-        const rawResult = await response.json();
-        const result: StandardExtractResponse = joinStringArrays(rawResult);
+        try {
+            if (!isRetry) onLog?.(`Enviando documentos para ${config.baseUrl}...`, 'info');
+            onLog?.('Extraindo conteúdo do DOD...', 'info');
 
-        onLog?.('Todos os documentos foram extraídos com sucesso!', 'success');
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    ...(encryptedKey ? { 'X-API-Key': encryptedKey } : {}),
+                    'X-Gemini-Model': config.model,
+                },
+                body: formData,
+                signal: controller.signal,
+            });
 
-        return result;
-    } catch (error) {
-        clearTimeout(timeoutId);
-        if (error instanceof Error && error.name === 'AbortError') {
-            onLog?.('Timeout: a requisição excedeu o tempo limite.', 'error');
-            throw new Error('A requisição excedeu o tempo limite. Verifique a conexão com o servidor.');
+            clearTimeout(timeoutId);
+
+            if (!response.ok) {
+                if ((response.status === 401 || response.status === 400) && !isRetry && config.apiKey) {
+                    clearPublicKeyCache();
+                    onLog?.('Chaves de segurança do servidor atualizadas. Sincronizando e tentando novamente...', 'info');
+                    return executeRequest(true);
+                }
+
+                const errorText = await response.text();
+                onLog?.(`Erro na resposta: ${response.status} - ${response.statusText}`, 'error');
+                throw new Error(`Erro ${response.status}: ${errorText || response.statusText}`);
+            }
+
+            onLog?.('Extraindo conteúdo do ETP...', 'info');
+            onLog?.('Extraindo conteúdo do TR...', 'info');
+
+            const rawResult = await response.json();
+            const result: StandardExtractResponse = joinStringArrays(rawResult);
+
+            onLog?.('Todos os documentos foram extraídos com sucesso!', 'success');
+
+            return result;
+        } catch (error) {
+            clearTimeout(timeoutId);
+            if (error instanceof Error && error.name === 'AbortError') {
+                onLog?.('Timeout: a requisição excedeu o tempo limite.', 'error');
+                throw new Error('A requisição excedeu o tempo limite. Verifique a conexão com o servidor.');
+            }
+            throw error;
         }
-        throw error;
-    }
+    };
+
+    return executeRequest();
 }

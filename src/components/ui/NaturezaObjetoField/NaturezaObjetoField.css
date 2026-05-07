@@ -1,0 +1,181 @@
+.natureza-objeto-field {
+  background-color: var(--surface-low);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.natureza-objeto-field__header {
+  margin-bottom: 16px;
+}
+
+.natureza-objeto-field__title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-high);
+  margin: 0 0 8px 0;
+}
+
+.natureza-objeto-field__desc {
+  font-size: 0.9rem;
+  color: var(--text-medium);
+  margin: 0;
+}
+
+.natureza-objeto-field__content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.natureza-objeto-field__group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.natureza-objeto-field__label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-high);
+}
+
+.natureza-objeto-field__select {
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: var(--surface-main);
+  color: var(--text-high);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat, repeat;
+  background-position: right .7em top 50%, 0 0;
+  background-size: .65em auto, 100%;
+}
+
+.natureza-objeto-field__select:focus,
+.natureza-objeto-field__search-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.natureza-objeto-field__search-container {
+  position: relative;
+}
+
+.natureza-objeto-field__search-input {
+  width: 100%;
+  padding: 10px 12px 10px 36px;
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  background-color: var(--surface-main);
+  color: var(--text-high);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.natureza-objeto-field__search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-light);
+  pointer-events: none;
+}
+
+.natureza-objeto-field__clear-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-light);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.natureza-objeto-field__clear-icon:hover {
+  background-color: var(--surface-hover);
+  color: var(--text-high);
+}
+
+.natureza-objeto-field__results {
+  margin-top: 8px;
+  background-color: var(--surface-main);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.natureza-objeto-field__result-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--surface-low);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: background-color 0.1s;
+}
+
+.natureza-objeto-field__result-item:last-child {
+  border-bottom: none;
+}
+
+.natureza-objeto-field__result-item:hover,
+.natureza-objeto-field__result-item--active {
+  background-color: var(--surface-hover);
+}
+
+.natureza-objeto-field__result-code {
+  font-family: monospace;
+  font-weight: 600;
+  color: var(--primary-color);
+  font-size: 0.9rem;
+}
+
+.natureza-objeto-field__result-desc {
+  color: var(--text-high);
+  font-size: 0.9rem;
+}
+
+.natureza-objeto-field__no-results {
+  padding: 12px;
+  text-align: center;
+  color: var(--text-medium);
+  font-size: 0.9rem;
+}
+
+.natureza-objeto-field__final-value {
+  margin-top: 8px;
+  padding: 12px;
+  background-color: rgba(37, 99, 235, 0.05);
+  border: 1px dashed var(--primary-color);
+  border-radius: 6px;
+  color: var(--text-high);
+}
+
+.natureza-objeto-field__final-label {
+  font-size: 0.8rem;
+  color: var(--primary-color);
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.natureza-objeto-field__final-text {
+  font-size: 1rem;
+  font-weight: 500;
+}

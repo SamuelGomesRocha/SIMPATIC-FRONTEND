@@ -9,6 +9,7 @@ import { ETP_FIELD_LABELS } from '../../config/constants';
 import { getETPStandardText } from '../../config/standardTexts';
 import SuggestionField from '../../components/ui/SuggestionField/SuggestionField';
 import { CalculoQuantitativoField } from '../../components/ui/CalculoQuantitativoField/CalculoQuantitativoField';
+import { NaturezaObjetoField } from '../../components/ui/NaturezaObjetoField/NaturezaObjetoField';
 import { getETPSuggestions } from '../../components/features/DocumentEditor/ETPRichTextCanvas';
 
 interface ETPResultPageProps {
@@ -295,6 +296,18 @@ export default function ETPResultPage({ response, onReset, onConfirmEditing, tra
                                                     fieldKey={key}
                                                     label={ETP_FIELD_LABELS[key] || key}
                                                     selection={selections[key] || { fieldKey: key, selectedIndex: -1, isEditing: true, customValue: '[]' }}
+                                                    onSelectionChange={handleSelectionChange}
+                                                />
+                                            );
+                                        }
+
+                                        if (key === 'resp_natureza_objeto') {
+                                            return (
+                                                <NaturezaObjetoField
+                                                    key={key}
+                                                    fieldKey={key}
+                                                    label={ETP_FIELD_LABELS[key] || key}
+                                                    selection={selections[key] || { fieldKey: key, selectedIndex: -1, isEditing: true, customValue: '' }}
                                                     onSelectionChange={handleSelectionChange}
                                                 />
                                             );
